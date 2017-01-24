@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <!--Used in activity_main layout to notify that there is an error -->
+    <string name="error_message">An error has occurred. Please try again by clicking following button.</string>
+
+    <!--Used in activity_main layout by retry button -->
+    <string name="button_retry">Retry</string>
+
 </resources>

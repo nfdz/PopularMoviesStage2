@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2017 Noe Fernandez
+-->
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+    
+    <ImageView
+        android:id="@+id/iv_movie_poster"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"/>
+
+    <TextView
+        android:id="@+id/tv_movie_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+</LinearLayout>
