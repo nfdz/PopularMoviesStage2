@@ -7,14 +7,14 @@
     android:orientation="vertical" 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/movie_layout_padding">
+    android:padding="@dimen/movie_item_layout_padding">
     
     <ImageView
         android:id="@+id/iv_movie_poster"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/movie_poster_height"
+        android:layout_height="@dimen/movie_item_poster_height"
         android:adjustViewBounds="true"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitCenter"/>
 
     <TextView
         android:id="@+id/tv_movie_title"

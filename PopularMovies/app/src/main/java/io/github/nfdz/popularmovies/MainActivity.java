@@ -5,6 +5,7 @@ package io.github.nfdz.popularmovies;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.AsyncTask;
@@ -152,7 +153,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
 
     @Override
     public void onClick(MovieInfo movie) {
-        Toast.makeText(this,"SELECCIONADO: "+movie.getTitle(),Toast.LENGTH_LONG).show();
+        Context context = this;
+        Class destination = DetailActivity.class;
+        Intent intentToDetailActivity = new Intent(context, destination);
+        intentToDetailActivity.putExtra(DetailActivity.INTENT_KEY, movie);
+        startActivity(intentToDetailActivity);
     }
 
     public class FetchMoviesTask extends AsyncTask<SortCriteria, Void, List<MovieInfo>> {

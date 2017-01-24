@@ -7,6 +7,8 @@
     <!--Used in activity_main layout by retry button -->
     <string name="button_retry">Retry</string>
 
+    <string name="action_share">Share</string>
+
     <string name="action_sort">Sort by</string>
 
     <string name="sort_by_dialog_title">Sort by</string>

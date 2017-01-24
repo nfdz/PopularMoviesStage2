@@ -93,8 +93,8 @@ public class TMDbJsonUtils {
             if (size.startsWith("w")) {
                 String widthStr = size.substring(1, size.length());
                 int width = Integer.parseInt(widthStr);
-                // 1/3 of the screen is enough
-                if ((screenWidth/3) < width) {
+                // half screen is enough
+                if ((screenWidth/2) < width) {
                     break;
                 }
             }

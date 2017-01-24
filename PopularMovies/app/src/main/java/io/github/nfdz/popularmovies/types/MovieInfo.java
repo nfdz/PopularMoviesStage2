@@ -3,11 +3,12 @@
  */
 package io.github.nfdz.popularmovies.types;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
-public class MovieInfo implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class MovieInfo implements Parcelable {
 
     private final String mTitle;
     private final String mReleaseDate;
@@ -26,6 +27,26 @@ public class MovieInfo implements Serializable {
         mPosterPath = posterPath;
         mSynopsis = synopsis;
     }
+
+    protected MovieInfo(Parcel in) {
+        mTitle = in.readString();
+        mReleaseDate = in.readString();
+        mRating = in.readDouble();
+        mPosterPath = in.readString();
+        mSynopsis = in.readString();
+    }
+
+    public static final Creator<MovieInfo> CREATOR = new Creator<MovieInfo>() {
+        @Override
+        public MovieInfo createFromParcel(Parcel in) {
+            return new MovieInfo(in);
+        }
+
+        @Override
+        public MovieInfo[] newArray(int size) {
+            return new MovieInfo[size];
+        }
+    };
 
     public String getTitle() {
         return mTitle;
@@ -76,5 +97,19 @@ public class MovieInfo implements Serializable {
         result = 31 * result + (getPosterPath() != null ? getPosterPath().hashCode() : 0);
         result = 31 * result + (getSynopsis() != null ? getSynopsis().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mTitle);
+        parcel.writeString(mReleaseDate);
+        parcel.writeDouble(mRating);
+        parcel.writeString(mPosterPath);
+        parcel.writeString(mSynopsis);
     }
 }
