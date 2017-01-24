@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class TMDbNetworkUtils {
 
-    public static enum OrderCriteria { MOST_POPULAR, HIGHEST_RATED };
+    public static enum SortCriteria { MOST_POPULAR, HIGHEST_RATED };
 
     private static final String TAG = TMDbNetworkUtils.class.getSimpleName();
 
@@ -39,9 +39,9 @@ public class TMDbNetworkUtils {
     static final String DEFAULT_PAGE = "1";
 
     // https://developers.themoviedb.org/3/movies/get-popular-movies
-    public static URL buildMoviesURL(OrderCriteria order) throws TMDbException {
-        String baseUrl = order.equals(OrderCriteria.MOST_POPULAR) ? POPULAR_MOVIES_BASE_URL
-                                                                  : TOP_RATED_MOVIES_BASE_URL;
+    public static URL buildMoviesURL(SortCriteria criteria) throws TMDbException {
+        String baseUrl = criteria.equals(criteria.MOST_POPULAR) ? POPULAR_MOVIES_BASE_URL
+                                                                : TOP_RATED_MOVIES_BASE_URL;
         Uri builtUri = Uri.parse(baseUrl).buildUpon()
                                          .appendQueryParameter(API_KEY_PARAM, TMDB_API_KEY)
                                          .appendQueryParameter(LANGUAGE_PARAM, DEFAULT_LANG)
