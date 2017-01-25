@@ -67,4 +67,18 @@ public class DetailActivity extends AppCompatActivity {
                 .getIntent();
         return shareIntent;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Back menu button has to finish this activity and avoid to
+                // create main activity again (avoiding to repeat network request
+                // and to lose sort criteria configuration)
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
