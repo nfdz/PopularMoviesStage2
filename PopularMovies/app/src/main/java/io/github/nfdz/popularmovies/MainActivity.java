@@ -17,7 +17,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,15 +51,16 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String ERROR_MOVIES = "There was an error retrieving movies data. ";
-    private static final double LANDSCAPE_MODE_MIN_RATIO = 0.75;
+    private static final float LANDSCAPE_MODE_MIN_RATIO = 0.75f;
+
+    private static SortCriteria sSortCriteria = SortCriteria.MOST_POPULAR;
 
     private RecyclerView mRecyclerView;
     private LinearLayout mErrorLayout;
     private ProgressBar mLoadingIndicator;
 
     private MoviesAdapter mMoviesAdapter;
-    private int mScreenWidth = 0;
-    private SortCriteria mSortCriteria = SortCriteria.MOST_POPULAR;
+    private int mMinPosterWidth = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +73,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        // get screen width to choose image size
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        mScreenWidth = size.x;
-        int screenHeight = size.y;
-        double aspectRatio = (screenHeight+0.0)/mScreenWidth;
+        // TODO: Instead use only one min poster width it could use two (thumbnail and detail)
+        mMinPosterWidth = getResources().getDimensionPixelSize(R.dimen.movie_detail_poster_width);
 
+        float aspectRatio = computeAspectRatio();
         int spanCount = 2;
         if (aspectRatio < LANDSCAPE_MODE_MIN_RATIO) {
             spanCount = 3;
@@ -96,6 +95,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
         loadMovies();
     }
 
+    private float computeAspectRatio() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        return (screenHeight+0.0f)/screenWidth;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -110,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
             String mostPopular = getString(R.string.sort_by_popular);
             String topRated = getString(R.string.sort_by_rated);
             String options[] = new String[] {mostPopular, topRated};
-            final int selected = mSortCriteria.equals(SortCriteria.MOST_POPULAR) ? 0 : 1;
+            final int selected = sSortCriteria.equals(SortCriteria.MOST_POPULAR) ? 0 : 1;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.sort_by_dialog_title));
             builder.setSingleChoiceItems(options, selected, new DialogInterface.OnClickListener() {
@@ -118,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
                 public void onClick(DialogInterface dialog, int selection) {
                     dialog.cancel();
                     if (selection != selected) {
-                        mSortCriteria = selection == 0 ? SortCriteria.MOST_POPULAR
+                        sSortCriteria = selection == 0 ? SortCriteria.MOST_POPULAR
                                                        : SortCriteria.HIGHEST_RATED;
                         loadMovies();
                     }
@@ -134,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
     private void loadMovies() {
         mMoviesAdapter.setMoviesData(null);
         showMoviesView();
-        new FetchMoviesTask().execute(mSortCriteria);
+        new FetchMoviesTask().execute(sSortCriteria);
     }
 
     private void showMoviesView() {
@@ -193,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
                 String jsonConfigResponse = TMDbNetworkUtils
                         .getResponseFromHttpUrl(configRequestUrl);
                 String posterBasePath = TMDbJsonUtils
-                        .getPosterBasePathFromJson(jsonConfigResponse, mScreenWidth);
+                        .getPosterBasePathFromJson(jsonConfigResponse, mMinPosterWidth);
                 URL moviesRequestUrl = TMDbNetworkUtils.buildMoviesURL(criteria);
                 String moviesJsonResponse = TMDbNetworkUtils
                         .getResponseFromHttpUrl(moviesRequestUrl);

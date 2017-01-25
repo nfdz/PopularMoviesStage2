@@ -61,7 +61,7 @@ public class TMDbJsonUtils {
     }
 
     public static String getPosterBasePathFromJson(String configJsonStr,
-                                                   int screenWidth) throws TMDbException {
+                                                   int minPosterWidth) throws TMDbException {
         try {
             JSONObject configJson = new JSONObject(configJsonStr);
             JSONObject imagesConfJson = configJson.getJSONObject(IMAGES_NODE);
@@ -76,7 +76,7 @@ public class TMDbJsonUtils {
             for (int i = 0; i < length; i++) {
                 sizes.add(sizesArray.getString(i));
             }
-            String size = resolveSize(sizes, screenWidth);
+            String size = resolveSize(sizes, minPosterWidth);
 
             return baseUrl + size;
         } catch(JSONException e) {
@@ -84,7 +84,7 @@ public class TMDbJsonUtils {
         }
     }
 
-    private static String resolveSize(List<String> sizes,  int screenWidth) {
+    private static String resolveSize(List<String> sizes, int minPosterWidth) {
         // All sizes are like 'w154' excepts 'original'
         // Try to get the first size with width equal to or greater than half the screen
         String size = "original";
@@ -93,13 +93,12 @@ public class TMDbJsonUtils {
             if (size.startsWith("w")) {
                 String widthStr = size.substring(1, size.length());
                 int width = Integer.parseInt(widthStr);
-                // half screen is enough
-                if ((screenWidth/2) < width) {
+                if (minPosterWidth < width) {
                     break;
                 }
             }
         }
-        Log.v(TAG, "Poster image width size is: " + size + " (Screen width=" + screenWidth + ")");
+        Log.v(TAG, "Poster image width size is: " + size + " (Min width=" + minPosterWidth + ")");
         return size;
     }
 }

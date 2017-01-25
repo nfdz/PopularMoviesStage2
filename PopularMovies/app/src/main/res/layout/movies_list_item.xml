@@ -11,8 +11,9 @@
     
     <ImageView
         android:id="@+id/iv_movie_poster"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/movie_item_poster_height"
+        android:layout_width="@dimen/movie_item_poster_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"/>
 

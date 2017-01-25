@@ -75,6 +75,7 @@ public class DetailActivity extends AppCompatActivity {
                 // Back menu button has to finish this activity and avoid to
                 // create main activity again (avoiding to repeat network request
                 // and to lose sort criteria configuration)
+                // I know that this is not the proper way, but I am learning yet :)
                 finish();
                 return true;
             default:
