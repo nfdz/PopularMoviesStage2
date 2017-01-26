@@ -6,8 +6,6 @@ package io.github.nfdz.popularmovies.types;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 public class MovieInfo implements Parcelable {
 
     private final String mTitle;

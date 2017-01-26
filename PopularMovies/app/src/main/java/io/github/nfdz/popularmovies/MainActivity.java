@@ -6,36 +6,22 @@ package io.github.nfdz.popularmovies;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.AsyncTask;
-import android.support.v4.view.MenuItemCompat;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.List;
@@ -74,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         // TODO: Instead use only one min poster width it could use two (thumbnail and detail)
-        mMinPosterWidth = getResources().getDimensionPixelSize(R.dimen.movie_detail_poster_width);
+        mMinPosterWidth = getResources().getDimensionPixelSize(R.dimen.movie_item_poster_width);
 
         float aspectRatio = computeAspectRatio();
         int spanCount = 2;
