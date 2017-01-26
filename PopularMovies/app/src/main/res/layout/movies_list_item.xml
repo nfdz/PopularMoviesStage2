@@ -19,8 +19,9 @@
 
     <TextView
         android:id="@+id/tv_movie_title"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/movie_item_poster_width"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:textAlignment="center"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="bold"
