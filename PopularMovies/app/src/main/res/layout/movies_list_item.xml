@@ -8,7 +8,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/movie_item_layout_padding">
-    
+
+    <!--This ImageView holds the poster image for one particular movie-->
     <ImageView
         android:id="@+id/iv_movie_poster"
         android:layout_width="@dimen/movie_item_poster_width"
@@ -17,6 +18,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"/>
 
+    <!--This ImageView holds the title for one particular movie-->
     <TextView
         android:id="@+id/tv_movie_title"
         android:layout_width="@dimen/movie_item_poster_width"

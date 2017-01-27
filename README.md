@@ -5,15 +5,16 @@ Associate Android Developer Fast Track Udacity Course first project
 
 You app will:
 
-    Present the user with a grid arrangement of movie posters upon launch.
-    Allow your user to change sort order via a setting:
-        The sort order can be by most popular or by highest-rated
-    Allow the user to tap on a movie poster and transition to a details screen with additional information such as:
-        original title
-        movie poster image thumbnail
-        A plot synopsis (called overview in the api)
-        user rating (called vote_average in the api)
-        release date
+* Present the user with a grid arrangement of movie posters upon launch.
+* Allow your user to change sort order via a setting:
+⋅⋅* The sort order can be by most popular or by highest-rated
+⋅⋅* Allow the user to tap on a movie poster and transition to a details screen with additional information such as:
+
+⋅⋅⋅original title
+⋅⋅⋅movie poster image thumbnail
+⋅⋅⋅A plot synopsis (called overview in the api)
+⋅⋅⋅user rating (called vote_average in the api)
+⋅⋅⋅release date
 
 ## Why this Project?
 
@@ -23,6 +24,6 @@ By building this app, you will demonstrate your understanding of the foundationa
 
 ## What Will I Learn After Stage 1?
 
-    You will fetch data from the Internet with theMovieDB API.
-    You will use adapters and custom list layouts to populate list views.
-    You will incorporate libraries to simplify the amount of code you need to write
+* You will fetch data from the Internet with theMovieDB API.
+* You will use adapters and custom list layouts to populate list views.
+* You will incorporate libraries to simplify the amount of code you need to write

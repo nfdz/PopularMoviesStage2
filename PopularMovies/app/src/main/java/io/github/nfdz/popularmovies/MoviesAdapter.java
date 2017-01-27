@@ -17,8 +17,12 @@ import java.util.List;
 
 import io.github.nfdz.popularmovies.types.MovieInfo;
 
+/**
+ * This class a recycler view adapter and manage the creation and binding of movie ui items.
+ */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
+    /** List of movies to show, it could be null */
     private List<MovieInfo> mMoviesData;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
@@ -63,6 +67,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         return mMoviesData != null ? mMoviesData.size() : 0;
     }
 
+    /**
+     * This methods update movies data list with given one and refresh the view.
+     *
+     * @param movies List of movies. Null object is the same than an empty list.
+     */
     public void setMoviesData(List<MovieInfo> movies) {
         mMoviesData = movies;
         notifyDataSetChanged();

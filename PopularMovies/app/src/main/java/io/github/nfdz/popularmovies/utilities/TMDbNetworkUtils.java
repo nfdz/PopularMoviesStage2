@@ -14,12 +14,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+/**
+ * These utilities will be used to communicate with the TMDb servers.
+ */
 public class TMDbNetworkUtils {
 
-    public static enum SortCriteria { MOST_POPULAR, HIGHEST_RATED };
+    /** Sort criteria flag */
+    public enum SortCriteria { MOST_POPULAR, HIGHEST_RATED };
 
     private static final String TAG = TMDbNetworkUtils.class.getSimpleName();
 
+    // Error message strings
     private static final String ERROR_URL = "There was an error building URL. ";
     private static final String ERROR_CONN = "There was an error with network connection. ";
     private static final String ERROR_NO_DATA = "There was an error with server response. It is empty. ";
@@ -27,18 +32,30 @@ public class TMDbNetworkUtils {
     // TODO: Insert your TMDb API key here
     private static final String TMDB_API_KEY = "";
 
+    // TMDb base URLs
     private static final String POPULAR_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/popular?";
     private static final String TOP_RATED_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?";
     private static final String CONFIGURATION_BASE_URL = " https://api.themoviedb.org/3/configuration?";
 
+    // URL movies params
     static final String PAGE_PARAM = "page";
     static final String LANGUAGE_PARAM = "language";
     static final String API_KEY_PARAM = "api_key";
 
+    // Default values for URL movies params
     static final String DEFAULT_LANG = "en-US";
     static final String DEFAULT_PAGE = "1";
 
-    // https://developers.themoviedb.org/3/movies/get-popular-movies
+
+    /**
+     * This method builds the URL needed to request movies list. This list depends on
+     * given sort criteria.
+     * For more information: https://developers.themoviedb.org/3/movies/get-popular-movies
+     *
+     * @param criteria flag to know what URL has to request.
+     * @return The URL to use to query the movies server.
+     * @throws TMDbException Exception building URL.
+     */
     public static URL buildMoviesURL(SortCriteria criteria) throws TMDbException {
         String baseUrl = criteria.equals(criteria.MOST_POPULAR) ? POPULAR_MOVIES_BASE_URL
                                                                 : TOP_RATED_MOVIES_BASE_URL;
@@ -57,7 +74,14 @@ public class TMDbNetworkUtils {
         }
     }
 
-    // https://developers.themoviedb.org/3/configuration/get-api-configuration
+
+    /**
+     * This method builds the URL needed to request TMDb configuration.
+     * For more information: https://developers.themoviedb.org/3/configuration/get-api-configuration
+     *
+     * @return The URL to use to query the movies server.
+     * @throws TMDbException TMDbException Exception building URL.
+     */
     public static URL buildConfigURL() throws TMDbException {
         Uri builtUri = Uri.parse(CONFIGURATION_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, TMDB_API_KEY)

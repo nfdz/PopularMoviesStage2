@@ -13,6 +13,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="io.github.nfdz.popularmovies.MainActivity">
 
+    <!--This RecyclerView shows movies information-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_movies"
         android:layout_width="match_parent"
@@ -20,12 +21,13 @@
         android:scrollbars="vertical"
         android:visibility="invisible" />
 
+    <!--This LinearLayout shows error information-->
     <LinearLayout
+        android:id="@+id/layout_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="invisible"
-        android:id="@+id/layout_error"
         android:layout_gravity="center">
 
         <TextView
@@ -45,6 +47,7 @@
 
     </LinearLayout>
 
+    <!--This ProgressBar represents that activity is requesting movies data-->
     <ProgressBar
         android:id="@+id/pb_loading_indicator"
         android:layout_height="42dp"

@@ -22,6 +22,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!--This ImageView shows the movie poster image-->
             <ImageView
                 android:id="@+id/iv_movie_detail_poster"
                 android:layout_width="@dimen/movie_detail_poster_width"
@@ -29,6 +30,8 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:layout_gravity="center" />
+
+            <!--This TextView shows the movie average rate-->
             <TextView
                 android:id="@+id/tv_movie_detail_rating"
                 android:layout_width="match_parent"
@@ -38,6 +41,8 @@
                 android:textStyle="bold|italic"
                 android:textAlignment="center"
                 android:paddingTop="10dp"/>
+
+            <!--This TextView shows the movie release date-->
             <TextView
                 android:id="@+id/tv_movie_detail_release"
                 android:layout_width="match_parent"
@@ -47,6 +52,8 @@
                 android:textStyle="bold|italic"
                 android:textAlignment="center"
                 android:paddingBottom="10dp"/>
+
+            <!--This TextView shows the movie title-->
             <TextView
                 android:layout_width="match_parent"
                 android:id="@+id/tv_movie_detail_title"
@@ -56,6 +63,8 @@
                 android:textStyle="normal|bold"
                 android:textAlignment="center"
                 android:paddingBottom="15dip" />
+
+            <!--This TextView shows the movie plot synopsis-->
             <TextView
                 android:id="@+id/tv_movie_detail_synopsis"
                 android:layout_width="match_parent"
