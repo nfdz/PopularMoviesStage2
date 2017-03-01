@@ -19,8 +19,10 @@ import java.util.Scanner;
  */
 public class TMDbNetworkUtils {
 
-    /** Sort criteria flag */
-    public enum SortCriteria { MOST_POPULAR, HIGHEST_RATED };
+    /** Sort criteria most popular flag */
+    public static final int MOST_POPULAR_FLAG = 0;
+    /** Sort criteria highest rated flag */
+    public static final int HIGHEST_RATED_FLAG = 1;
 
     private static final String TAG = TMDbNetworkUtils.class.getSimpleName();
 
@@ -56,9 +58,9 @@ public class TMDbNetworkUtils {
      * @return The URL to use to query the movies server.
      * @throws TMDbException Exception building URL.
      */
-    public static URL buildMoviesURL(SortCriteria criteria) throws TMDbException {
-        String baseUrl = criteria.equals(criteria.MOST_POPULAR) ? POPULAR_MOVIES_BASE_URL
-                                                                : TOP_RATED_MOVIES_BASE_URL;
+    public static URL buildMoviesURL(int criteria) throws TMDbException {
+        String baseUrl = criteria == MOST_POPULAR_FLAG ? POPULAR_MOVIES_BASE_URL
+                                                       : TOP_RATED_MOVIES_BASE_URL;
         Uri builtUri = Uri.parse(baseUrl).buildUpon()
                                          .appendQueryParameter(API_KEY_PARAM, TMDB_API_KEY)
                                          .appendQueryParameter(LANGUAGE_PARAM, DEFAULT_LANG)

@@ -7,14 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,28 +21,20 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import java.net.URL;
 import java.util.List;
 
 import io.github.nfdz.popularmovies.MoviesAdapter.MoviesAdapterOnClickHandler;
 import io.github.nfdz.popularmovies.types.MovieInfo;
-import io.github.nfdz.popularmovies.utilities.TMDbException;
-import io.github.nfdz.popularmovies.utilities.TMDbJsonUtils;
+import io.github.nfdz.popularmovies.types.AsyncTaskListener;
 import io.github.nfdz.popularmovies.utilities.TMDbNetworkUtils;
-import io.github.nfdz.popularmovies.utilities.TMDbNetworkUtils.SortCriteria;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapterOnClickHandler {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    /** Log error message used if there is an error retrieving movies data */
-    private static final String ERROR_MOVIES = "There was an error retrieving movies data. ";
 
     /** Minimum aspect ratio to set landscape mode (grid has more columns) */
     private static final float LANDSCAPE_MODE_MIN_RATIO = 0.75f;
 
     /** Sort criteria configuration */
-    private static SortCriteria sSortCriteria = SortCriteria.MOST_POPULAR;
+    private static int sSortCriteria = TMDbNetworkUtils.MOST_POPULAR_FLAG;
 
     // Activity views
     private RecyclerView mRecyclerView;
@@ -118,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
             String mostPopular = getString(R.string.sort_by_popular);
             String topRated = getString(R.string.sort_by_rated);
             String options[] = new String[] {mostPopular, topRated};
-            final int selected = sSortCriteria.equals(SortCriteria.MOST_POPULAR) ? 0 : 1;
+            final int selected = sSortCriteria == TMDbNetworkUtils.MOST_POPULAR_FLAG ? 0 : 1;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.sort_by_dialog_title));
             builder.setSingleChoiceItems(options, selected, new DialogInterface.OnClickListener() {
@@ -127,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
                     dialog.cancel();
                     // if sort criteria has changed, saved it and load movies again
                     if (selection != selected) {
-                        sSortCriteria = selection == 0 ? SortCriteria.MOST_POPULAR
-                                                       : SortCriteria.HIGHEST_RATED;
+                        sSortCriteria = selection == 0 ? TMDbNetworkUtils.MOST_POPULAR_FLAG
+                                                       : TMDbNetworkUtils.HIGHEST_RATED_FLAG;
                         loadMovies();
                     }
                 }
@@ -146,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
     private void loadMovies() {
         mMoviesAdapter.setMoviesData(null);
         showMoviesView();
-        new FetchMoviesTask().execute(sSortCriteria);
+        new FetchMoviesTask(mMinPosterWidth, new FetchMoviesTaskListener()).execute(sSortCriteria);
     }
 
     /**
@@ -183,50 +173,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
         startActivity(intentToDetailActivity);
     }
 
-
-    public class FetchMoviesTask extends AsyncTask<SortCriteria, Void, List<MovieInfo>> {
+    private class FetchMoviesTaskListener implements AsyncTaskListener<List<MovieInfo>> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        public void onPreTaskExecution() {
             mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected void onPostExecute(List<MovieInfo> moviesData) {
+        public void onTaskComplete(List<MovieInfo> moviesData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (moviesData != null) {
                 showMoviesView();
                 mMoviesAdapter.setMoviesData(moviesData);
             } else {
                 showErrorView();
-            }
-        }
-
-        @Override
-        protected List<MovieInfo> doInBackground(SortCriteria... params) {
-
-            /* If there is no order criteria it cannot fetch movies info */
-            if (params.length == 0) {
-                return null;
-            }
-            SortCriteria criteria = params[0];
-
-            try {
-                URL configRequestUrl = TMDbNetworkUtils.buildConfigURL();
-                String jsonConfigResponse = TMDbNetworkUtils
-                        .getResponseFromHttpUrl(configRequestUrl);
-                String posterBasePath = TMDbJsonUtils
-                        .getPosterBasePathFromJson(jsonConfigResponse, mMinPosterWidth);
-                URL moviesRequestUrl = TMDbNetworkUtils.buildMoviesURL(criteria);
-                String moviesJsonResponse = TMDbNetworkUtils
-                        .getResponseFromHttpUrl(moviesRequestUrl);
-                List<MovieInfo> movies = TMDbJsonUtils
-                        .getMoviesFromJson(moviesJsonResponse, posterBasePath);
-                return movies;
-            } catch (TMDbException e) {
-                Log.d(TAG, ERROR_MOVIES, e);
-                return null;
             }
         }
     }

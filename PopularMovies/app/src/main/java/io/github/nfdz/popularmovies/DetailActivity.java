@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 
 public class DetailActivity extends AppCompatActivity {
@@ -30,30 +32,30 @@ public class DetailActivity extends AppCompatActivity {
     /** MovieInfo object that describes this activity */
     private MovieInfo mMovie;
 
+    @BindView(R.id.tv_movie_detail_title) TextView mTitle;
+    @BindView(R.id.tv_movie_detail_rating) TextView mRating;
+    @BindView(R.id.tv_movie_detail_release) TextView mReleaseDate;
+    @BindView(R.id.tv_movie_detail_synopsis) TextView mSynopsis;
+    @BindView(R.id.iv_movie_detail_poster) ImageView mPoster;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
 
         // Check if the intent contains expected movie object
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(INTENT_KEY)) {
             mMovie = intent.getParcelableExtra(INTENT_KEY);
-
             // Set this activity title the movie title
             setTitle(mMovie.getTitle());
-
             // Set movie data in ui views
-            TextView title = (TextView) findViewById(R.id.tv_movie_detail_title);
-            title.setText(mMovie.getTitle());
-            TextView rating = (TextView) findViewById(R.id.tv_movie_detail_rating);
-            rating.setText(Double.toString(mMovie.getRating())+"/10");
-            TextView releaseDate = (TextView) findViewById(R.id.tv_movie_detail_release);
-            releaseDate.setText(mMovie.getReleaseDate());
-            TextView synopsis = (TextView) findViewById(R.id.tv_movie_detail_synopsis);
-            synopsis.setText(mMovie.getSynopsis());
-            ImageView poster = (ImageView) findViewById(R.id.iv_movie_detail_poster);
-            Picasso.with(this).load(mMovie.getPosterPath()).into(poster);
+            mTitle.setText(mMovie.getTitle());
+            mRating.setText(Double.toString(mMovie.getRating())+"/10");
+            mReleaseDate.setText(mMovie.getReleaseDate());
+            mSynopsis.setText(mMovie.getSynopsis());
+            Picasso.with(this).load(mMovie.getPosterPath()).into(mPoster);
         } else {
             // If intent has no movie information, finish activity (this situation will never happen)
             Log.e(TAG, "Created detail activity without movie data stored in intent as expected.");
@@ -82,20 +84,5 @@ public class DetailActivity extends AppCompatActivity {
                 .setText(String.format(MOVIE_SHARE_FORMAT, mMovie.getTitle()))
                 .getIntent();
         return shareIntent;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Back menu button has to finish this activity and avoid to
-                // create main activity again (avoiding to repeat network request
-                // and to lose sort criteria configuration)
-                // I know that this is not the proper way, but I am learning yet :)
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

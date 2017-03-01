@@ -37,10 +37,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_movie_detail_rating"
                 android:textStyle="bold|italic"
                 android:textAlignment="center"
-                android:paddingTop="10dp"/>
+                android:paddingTop="10dp"
+                tools:text="5/5" />
 
             <!--This TextView shows the movie release date-->
             <TextView
@@ -48,10 +49,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_movie_detail_release"
                 android:textStyle="bold|italic"
                 android:textAlignment="center"
-                android:paddingBottom="10dp"/>
+                android:paddingBottom="10dp"
+                tools:text="11/22/33" />
 
             <!--This TextView shows the movie title-->
             <TextView
@@ -59,16 +61,19 @@
                 android:id="@+id/tv_movie_detail_title"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="36sp"
+                android:textSize="@dimen/text_size_movie_detail_title"
                 android:textStyle="normal|bold"
                 android:textAlignment="center"
-                android:paddingBottom="15dip" />
+                android:paddingBottom="15dip"
+                tools:text="Movie Title" />
 
             <!--This TextView shows the movie plot synopsis-->
             <TextView
                 android:id="@+id/tv_movie_detail_synopsis"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_movie_detail_synopsis"
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " />
 
         </LinearLayout>
 

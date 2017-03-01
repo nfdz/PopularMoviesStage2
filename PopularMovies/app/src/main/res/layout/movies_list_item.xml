@@ -4,6 +4,7 @@
 -->
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
         android:textAlignment="center"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="bold"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/text_size_movie_item_title"
+        tools:text="Movie Title" />
 
 </LinearLayout>
