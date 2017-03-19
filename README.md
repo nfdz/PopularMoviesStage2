@@ -1,4 +1,4 @@
-# PopularMoviesStage1
+# PopularMoviesStage2
 Associate Android Developer Fast Track Udacity Course second project 
 
 ## Project Overview
