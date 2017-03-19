@@ -1,28 +1,17 @@
 # PopularMoviesStage1
-Associate Android Developer Fast Track Udacity Course first project 
+Associate Android Developer Fast Track Udacity Course second project 
 
 ## Project Overview
 
-You app will:
+In this second and final stage, you’ll add additional functionality to the app you built in Stage 1. You app will:
 
-* Present the user with a grid arrangement of movie posters upon launch.
-* Allow your user to change sort order via a setting:
-  * The sort order can be by most popular or by highest-rated
-* Allow the user to tap on a movie poster and transition to a details screen with additional information such as:
-  * original title
-  * movie poster image thumbnail
-  * A plot synopsis (called overview in the api)
-  * user rating (called vote_average in the api)
-  * release date
+* You’ll allow users to view and play trailers ( either in the youtube app or a web browser).
+* You’ll allow users to read reviews of a selected movie.
+* You’ll also allow users to mark a movie as a favorite in the details view by tapping a button(star). This is for a local movies collection that you will maintain and does not require an API request.
+* You’ll modify the existing sorting criteria for the main view to include an additional pivot to show their favorites collection.
 
-## Why this Project?
+Recall from Stage 1, you built a UI that presented the user with a grid of movie posters, allowed users to change sort order, and presented a screen with additional information on the movie selected by the user:
 
-To become an Android developer, you must know how to bring particular mobile experiences to life. Specifically, you need to know how to build clean and compelling user interfaces (UIs), fetch data from network services, and optimize the experience for various mobile devices. You will hone these fundamental skills in this project.
+## What Will I Learn After Stage 2?
 
-By building this app, you will demonstrate your understanding of the foundational elements of programming for Android. Your app will communicate with the Internet and provide a responsive and delightful user experience.
-
-## What Will I Learn After Stage 1?
-
-* You will fetch data from the Internet with theMovieDB API.
-* You will use adapters and custom list layouts to populate list views.
-* You will incorporate libraries to simplify the amount of code you need to write
+* You will build a fully featured application that looks and feels natural on the latest Android operating system (Nougat, as of November 2016).
