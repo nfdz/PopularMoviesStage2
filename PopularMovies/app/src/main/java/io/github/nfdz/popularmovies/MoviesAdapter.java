@@ -60,7 +60,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         holder.mTitleTextView.setText(movie.getTitle());
         holder.mRatingTextView.setText(Double.toString(movie.getRating())+"/10");
         Context context = holder.mPosterImageView.getContext();
-        Picasso.with(context).load(movie.getPosterPath()).into(holder.mPosterImageView);
+        // add no poster art meanwhile Picasso is loading the poster
+        holder.mPosterImageView.setImageResource(R.drawable.art_no_poster);
+        Picasso.with(context).load(movie.getPosterPaths()[0]).into(holder.mPosterImageView);
     }
 
     @Override

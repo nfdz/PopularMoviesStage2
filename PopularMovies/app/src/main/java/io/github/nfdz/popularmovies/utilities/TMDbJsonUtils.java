@@ -63,7 +63,7 @@ public class TMDbJsonUtils {
                 String releaseDate = movieNode.getString(RELEASE_NODE);
                 double rating = movieNode.getDouble(VOTE_AVG_NODE);
 
-                MovieInfo movie = new MovieInfo(title, releaseDate, rating, posterPath, synopsis);
+                MovieInfo movie = new MovieInfo(title, releaseDate, rating, synopsis, posterPath);
                 result.add(movie);
             }
             return result;

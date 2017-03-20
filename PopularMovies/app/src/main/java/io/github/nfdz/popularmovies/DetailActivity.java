@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
             mRating.setText(Double.toString(mMovie.getRating())+"/10");
             mReleaseDate.setText(mMovie.getReleaseDate());
             mSynopsis.setText(mMovie.getSynopsis());
-            Picasso.with(this).load(mMovie.getPosterPath()).into(mPoster);
+            Picasso.with(this).load(mMovie.getPosterPaths()[0]).into(mPoster);
         } else {
             // If intent has no movie information, finish activity (this situation will never happen)
             Log.e(TAG, "Created detail activity without movie data stored in intent as expected.");

@@ -6,6 +6,8 @@ package io.github.nfdz.popularmovies.types;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
 /**
  * This class contains all needed information about a movie in this application.
  */
@@ -21,7 +23,7 @@ public class MovieInfo implements Parcelable {
     private final double mRating;
 
     /** Image poster path */
-    private final String mPosterPath;
+    private final String[] mPosterPaths;
 
     /** Plot synopsis */
     private final String mSynopsis;
@@ -32,18 +34,18 @@ public class MovieInfo implements Parcelable {
      * @param title movie title.
      * @param releaseDate release date.
      * @param rating votes average (over 10).
-     * @param posterPath image poster path.
      * @param synopsis plot synopsis.
+     * @param posterPaths image poster path.
      */
     public MovieInfo(String title,
                      String releaseDate,
                      double rating,
-                     String posterPath,
-                     String synopsis) {
+                     String synopsis,
+                     String... posterPaths) {
         mTitle = title;
         mRating = rating;
         mReleaseDate = releaseDate;
-        mPosterPath = posterPath;
+        mPosterPaths = posterPaths != null ? posterPaths : new String[0];
         mSynopsis = synopsis;
     }
 
@@ -55,8 +57,12 @@ public class MovieInfo implements Parcelable {
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mRating = in.readDouble();
-        mPosterPath = in.readString();
         mSynopsis = in.readString();
+        int pathsSize = in.readInt();
+        mPosterPaths = new String[pathsSize];
+        for (int i = 0; i < pathsSize; i++) {
+            mPosterPaths[i] = in.readString();
+        }
     }
 
     /**
@@ -86,8 +92,8 @@ public class MovieInfo implements Parcelable {
         return mRating;
     }
 
-    public String getPosterPath() {
-        return mPosterPath;
+    public String[] getPosterPaths() {
+        return mPosterPaths;
     }
 
     public String getSynopsis() {
@@ -106,7 +112,7 @@ public class MovieInfo implements Parcelable {
             return false;
         if (getReleaseDate() != null ? !getReleaseDate().equals(movieInfo.getReleaseDate()) : movieInfo.getReleaseDate() != null)
             return false;
-        if (getPosterPath() != null ? !getPosterPath().equals(movieInfo.getPosterPath()) : movieInfo.getPosterPath() != null)
+        if (getPosterPaths() != null ? !Arrays.equals(getPosterPaths(), movieInfo.getPosterPaths()) : movieInfo.getPosterPaths() != null)
             return false;
         return getSynopsis() != null ? getSynopsis().equals(movieInfo.getSynopsis()) : movieInfo.getSynopsis() == null;
 
@@ -120,7 +126,7 @@ public class MovieInfo implements Parcelable {
         result = 31 * result + (getReleaseDate() != null ? getReleaseDate().hashCode() : 0);
         temp = Double.doubleToLongBits(getRating());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (getPosterPath() != null ? getPosterPath().hashCode() : 0);
+        result = 31 * result + (getPosterPaths() != null ? Arrays.hashCode(getPosterPaths()) : 0);
         result = 31 * result + (getSynopsis() != null ? getSynopsis().hashCode() : 0);
         return result;
     }
@@ -135,7 +141,10 @@ public class MovieInfo implements Parcelable {
         parcel.writeString(mTitle);
         parcel.writeString(mReleaseDate);
         parcel.writeDouble(mRating);
-        parcel.writeString(mPosterPath);
         parcel.writeString(mSynopsis);
+        parcel.writeInt(mPosterPaths.length);
+        for (String posterPath : mPosterPaths) {
+            parcel.writeString(posterPath);
+        }
     }
 }
