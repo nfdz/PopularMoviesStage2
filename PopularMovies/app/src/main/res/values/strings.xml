@@ -17,4 +17,6 @@
 
     <string name="sort_by_rated">Highest-rated</string>
 
+    <string name="movie_item_rating_unit">★</string>
+
 </resources>

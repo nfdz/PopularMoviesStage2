@@ -58,6 +58,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
         MovieInfo movie = mMoviesData.get(position);
         holder.mTitleTextView.setText(movie.getTitle());
+        holder.mRatingTextView.setText(Double.toString(movie.getRating())+"/10");
         Context context = holder.mPosterImageView.getContext();
         Picasso.with(context).load(movie.getPosterPath()).into(holder.mPosterImageView);
     }
@@ -83,12 +84,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView mTitleTextView;
+        public final TextView mRatingTextView;
         public final ImageView mPosterImageView;
 
         public MoviesAdapterViewHolder(View view) {
             super(view);
             mTitleTextView = (TextView) view.findViewById(R.id.tv_movie_title);
             mPosterImageView = (ImageView) view.findViewById(R.id.iv_movie_poster);
+            mRatingTextView = (TextView) view.findViewById(R.id.tv_movie_rating);
             view.setOnClickListener(this);
         }
 
