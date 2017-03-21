@@ -39,6 +39,8 @@ public class MovieInfoUtils {
 
     public static Map<Integer, MovieInfo> getMoviesFromCursor(Cursor cursor) {
         Map<Integer, MovieInfo> movies = new HashMap<>();
+        cursor.moveToFirst();
+        cursor.moveToPrevious();
         while (cursor.moveToNext()) {
             int id = cursor.getInt(INDEX_MOVIE_ID);
             String title = cursor.getString(INDEX_MOVIE_TITLE);
