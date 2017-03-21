@@ -10,6 +10,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Driver;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
+
 import java.util.concurrent.TimeUnit;
 
 import io.github.nfdz.popularmovies.data.MovieContract;
@@ -17,7 +25,7 @@ import io.github.nfdz.popularmovies.data.MovieContract;
 public class MoviesSyncUtils {
 
     /** Interval at which to sync with the movies data. */
-    private static final int SYNC_INTERVAL_HOURS = 3;
+    private static final int SYNC_INTERVAL_HOURS = 24;
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
 
@@ -26,18 +34,17 @@ public class MoviesSyncUtils {
     private static final String MOVIES_SYNC_TAG = "movies-sync";
 
     /**
-     * Schedules a repeating sync of Sunshine's weather data using FirebaseJobDispatcher.
-     * @param context Context used to create the GooglePlayDriver that powers the
-     *                FirebaseJobDispatcher
+     * Schedules a repeating sync of movies data using FirebaseJobDispatcher.
+     * @param context Context
      */
     static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
-/*
+
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
         Job syncSunshineJob = dispatcher.newJobBuilder()
-                .setService(SunshineFirebaseJobService.class)
-                .setTag(SUNSHINE_SYNC_TAG)
+                .setService(MoviesSyncFirebaseJobService.class)
+                .setTag(MOVIES_SYNC_TAG)
                 .setConstraints(Constraint.ON_ANY_NETWORK)
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
@@ -47,7 +54,7 @@ public class MoviesSyncUtils {
                 .setReplaceCurrent(true)
                 .build();
 
-        dispatcher.schedule(syncSunshineJob);*/
+        dispatcher.schedule(syncSunshineJob);
     }
 
     synchronized public static void initialize(@NonNull final Context context) {
