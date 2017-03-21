@@ -13,6 +13,15 @@ import java.util.Arrays;
  */
 public class MovieInfo implements Parcelable {
 
+    /** Identifier from internet database */
+    private final int mMovieId;
+
+    /** Image backdrop paths */
+    private final String[] mBackdropPaths;
+
+    /** Has video flag */
+    private final boolean mHasVideo;
+
     /** Movie title */
     private final String mTitle;
 
@@ -22,7 +31,7 @@ public class MovieInfo implements Parcelable {
     /** Votes average (over 10) */
     private final double mRating;
 
-    /** Image poster path */
+    /** Image poster paths */
     private final String[] mPosterPaths;
 
     /** Plot synopsis */
@@ -37,16 +46,22 @@ public class MovieInfo implements Parcelable {
      * @param synopsis plot synopsis.
      * @param posterPaths image poster path.
      */
-    public MovieInfo(String title,
+    public MovieInfo(int movieId,
+                     String title,
                      String releaseDate,
                      double rating,
                      String synopsis,
-                     String... posterPaths) {
+                     boolean hasVideo,
+                     String[] posterPaths,
+                     String[] backdropPaths) {
+        mMovieId = movieId;
         mTitle = title;
-        mRating = rating;
         mReleaseDate = releaseDate;
-        mPosterPaths = posterPaths != null ? posterPaths : new String[0];
+        mRating = rating;
         mSynopsis = synopsis;
+        mHasVideo = hasVideo;
+        mPosterPaths = posterPaths;
+        mBackdropPaths = backdropPaths;
     }
 
     /**
@@ -54,14 +69,23 @@ public class MovieInfo implements Parcelable {
      * @param in parcel object that contains movie data.
      */
     protected MovieInfo(Parcel in) {
+        mMovieId = in.readInt();
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mRating = in.readDouble();
         mSynopsis = in.readString();
-        int pathsSize = in.readInt();
-        mPosterPaths = new String[pathsSize];
-        for (int i = 0; i < pathsSize; i++) {
+        mHasVideo = in.readByte() != 0;
+
+        int postersSize = in.readInt();
+        mPosterPaths = new String[postersSize];
+        for (int i = 0; i < postersSize; i++) {
             mPosterPaths[i] = in.readString();
+        }
+
+        int backdropsSize = in.readInt();
+        mBackdropPaths = new String[backdropsSize];
+        for (int i = 0; i < backdropsSize; i++) {
+            mBackdropPaths[i] = in.readString();
         }
     }
 
@@ -80,6 +104,10 @@ public class MovieInfo implements Parcelable {
         }
     };
 
+    public int getMovieId() {
+        return mMovieId;
+    }
+
     public String getTitle() {
         return mTitle;
     }
@@ -92,20 +120,22 @@ public class MovieInfo implements Parcelable {
         return mRating;
     }
 
-    public String[] getPosterPaths() {
-        return mPosterPaths;
-    }
-
     public String getSynopsis() {
         return mSynopsis;
     }
 
-    /**
-     * This implementation of equals do not use rating, synopsis or poster paths to check
-     * if the other object is the same because these fields could change with time (in internet service).
-     * @param o other object
-     * @return
-     */
+    public String[] getPosterPaths() {
+        return mPosterPaths;
+    }
+
+    public String[] getBackdropPaths() {
+        return mBackdropPaths;
+    }
+
+    public boolean hasVideo() {
+        return mHasVideo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,29 +143,12 @@ public class MovieInfo implements Parcelable {
 
         MovieInfo movieInfo = (MovieInfo) o;
 
-        if (Double.compare(movieInfo.getRating(), getRating()) != 0) return false;
-        if (getTitle() != null ? !getTitle().equals(movieInfo.getTitle()) : movieInfo.getTitle() != null)
-            return false;
-        if (getReleaseDate() != null ? !getReleaseDate().equals(movieInfo.getReleaseDate()) : movieInfo.getReleaseDate() != null)
-            return false;
-        if (getPosterPaths() != null ? !Arrays.equals(getPosterPaths(), movieInfo.getPosterPaths()) : movieInfo.getPosterPaths() != null)
-            return false;
-        return getSynopsis() != null ? getSynopsis().equals(movieInfo.getSynopsis()) : movieInfo.getSynopsis() == null;
-
+        return mMovieId == movieInfo.mMovieId;
     }
 
-    /**
-     * This implementation of hashcode do not use rating, synopsis or poster paths to compute
-     * the hash because these fields could change with time (in internet service).
-     * @return hashcode
-     */
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = getTitle() != null ? getTitle().hashCode() : 0;
-        result = 31 * result + (getReleaseDate() != null ? getReleaseDate().hashCode() : 0);
-        return result;
+        return mMovieId;
     }
 
     @Override
@@ -145,13 +158,21 @@ public class MovieInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mMovieId);
         parcel.writeString(mTitle);
         parcel.writeString(mReleaseDate);
         parcel.writeDouble(mRating);
         parcel.writeString(mSynopsis);
+        parcel.writeByte((byte) (mHasVideo ? 1 : 0));
+
         parcel.writeInt(mPosterPaths.length);
         for (String posterPath : mPosterPaths) {
             parcel.writeString(posterPath);
+        }
+
+        parcel.writeInt(mBackdropPaths.length);
+        for (String backdropPath : mBackdropPaths) {
+            parcel.writeString(backdropPath);
         }
     }
 }

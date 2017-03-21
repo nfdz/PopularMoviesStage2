@@ -225,7 +225,7 @@ public class MovieContentProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case CODE_MOVIES:
                 id = insertInTable(MovieContract.MovieEntry.TABLE_NAME, contentValues);
-                returnUri = MovieContract.MovieEntry.buildUriWithId(id);
+                returnUri = MovieContract.MovieEntry.CONTENT_URI;
                 break;
             case CODE_POPULAR_MOVIES:
                 id = insertInTable(MovieContract.PopularMovieEntry.TABLE_NAME, contentValues);

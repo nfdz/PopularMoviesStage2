@@ -46,22 +46,33 @@ public class MovieContract {
         /** Movie rating. Stored as double. */
         public static final String COLUMN_RATING = "rating";
 
+        /** Movie synopsis. Stored as string. */
+        public static final String COLUMN_SYNOPSIS = "synopsis";
+
+        /** Movie synopsis. Stored as string. */
+        public static final String COLUMN_HAS_VIDEO = "has_video";
+
         /**
          * Movie poster paths. Stored as string.
          * This is string contains a list of concatenated paths.
          * */
         public static final String COLUMN_POSTER_PATHS = "poster_paths";
 
-        /** Movie synopsis. Stored as string. */
-        public static final String COLUMN_SYNOPSIS = "synopsis";
+        /**
+         * Movie backdrop paths. Stored as string.
+         * This is string contains a list of concatenated paths.
+         * */
+        public static final String COLUMN_BACKDROP_PATHS = "backdrop_paths";
 
         public static final String SQL_CREATE_TABLE = "CREATE TABLE "  + TABLE_NAME + " (" +
-                _ID                 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_TITLE        + " TEXT NOT NULL, " +
-                COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
-                COLUMN_RATING       + " REAL NOT NULL, " +
-                COLUMN_POSTER_PATHS + " TEXT NOT NULL, " +
-                COLUMN_SYNOPSIS     + " TEXT NOT NULL);";
+                _ID                   + " INTEGER PRIMARY KEY UNIQUE, " +
+                COLUMN_TITLE          + " TEXT NOT NULL, " +
+                COLUMN_RELEASE_DATE   + " TEXT NOT NULL, " +
+                COLUMN_RATING         + " REAL NOT NULL, " +
+                COLUMN_HAS_VIDEO      + " INTEGER NOT NULL, " +
+                COLUMN_POSTER_PATHS   + " TEXT NOT NULL, " +
+                COLUMN_BACKDROP_PATHS + " TEXT NOT NULL, " +
+                COLUMN_SYNOPSIS       + " TEXT NOT NULL);";
 
         public static Uri buildUriWithId(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

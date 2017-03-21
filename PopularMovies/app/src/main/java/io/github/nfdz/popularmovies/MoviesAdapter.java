@@ -79,7 +79,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         holder.mRatingTextView.setText(Double.toString(mCursor.getDouble(INDEX_MOVIE_RATING))+"/10");
         Context context = holder.mPosterImageView.getContext();
         String mergedPosterPaths = mCursor.getString(INDEX_MOVIE_POSTER_PATHS);
-        String[] posterPaths = MovieInfoUtils.splitPosterPaths(mergedPosterPaths);
+        /// FIXME
+        String[] posterPaths = MovieInfoUtils.splitPaths(mergedPosterPaths);
         // add no poster art meanwhile Picasso is loading the poster
         holder.mPosterImageView.setImageResource(R.drawable.art_no_poster);
         Picasso.with(context).load(posterPaths[0]).into(holder.mPosterImageView);

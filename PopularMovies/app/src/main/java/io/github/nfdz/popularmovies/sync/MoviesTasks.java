@@ -89,47 +89,32 @@ public class MoviesTasks {
         Map<Integer, MovieInfo> insertedPopularMovies = new HashMap<>();
         for (MovieInfo movie : popularMovies) {
             // use stored id if exists
-            long id = lookForId(movie, favoriteMovies);
-            if (id == -1) {
+            if (!favoriteMovies.containsKey(movie.getMovieId())) {
                 // insert movie
                 ContentValues movieValues = MovieInfoUtils.getContentValuesFor(movie);
-                Uri uri = contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
-                id = MovieContract.MovieEntry.extractIdFromUri(uri);
-                insertedPopularMovies.put((int) id, movie);
+                contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
+                insertedPopularMovies.put(movie.getMovieId(), movie);
             }
             // insert popular
             ContentValues popularValues = new ContentValues();
-            popularValues.put(MovieContract.PopularMovieEntry.COLUMN_MOVIE_ID, id);
+            popularValues.put(MovieContract.PopularMovieEntry.COLUMN_MOVIE_ID, movie.getMovieId());
             contentResolver.insert(MovieContract.PopularMovieEntry.CONTENT_URI, popularValues);
         }
 
         // insert highest rated movies (avoid insert already contained movies)
         for (MovieInfo movie : highestRatedMovies) {
             // use stored id if exists, look for in favorite movies and inserted popular movies
-            long id = lookForId(movie, favoriteMovies);
-            if (id == -1) id = lookForId(movie, insertedPopularMovies);
-            if (id == -1) {
+            if (!favoriteMovies.containsKey(movie.getMovieId()) &&
+                    !insertedPopularMovies.containsKey(movie.getMovieId())) {
                 // insert movie
                 ContentValues movieValues = MovieInfoUtils.getContentValuesFor(movie);
-                Uri uri = contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
-                id = MovieContract.MovieEntry.extractIdFromUri(uri);
+                contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
             }
             // insert highest rated
             ContentValues popularValues = new ContentValues();
-            popularValues.put(MovieContract.HighestRatedMovieEntry.COLUMN_MOVIE_ID, id);
+            popularValues.put(MovieContract.HighestRatedMovieEntry.COLUMN_MOVIE_ID, movie.getMovieId());
             contentResolver.insert(MovieContract.HighestRatedMovieEntry.CONTENT_URI, popularValues);
         }
-    }
-
-    private static long lookForId(MovieInfo movie, Map<Integer, MovieInfo> map) {
-        long id = -1;
-        for (Map.Entry<Integer, MovieInfo> entry : map.entrySet()) {
-            if (entry.getValue().equals(movie)) {
-                id = entry.getKey();
-                break;
-            }
-        }
-        return id;
     }
 
     private static String buildDeleteSqlWhereNotIds(Set<Integer> ids) {
@@ -150,8 +135,9 @@ public class MoviesTasks {
         URL configRequestUrl = TMDbNetworkUtils.buildConfigURL();
         String jsonConfigResponse = TMDbNetworkUtils.getResponseFromHttpUrl(configRequestUrl);
         String[] posterBasePaths = TMDbJsonUtils.getPosterBasePathsFromJson(jsonConfigResponse);
+        String[] backdropBasePaths = TMDbJsonUtils.getBackdropBasePathsFromJson(jsonConfigResponse);
         URL moviesRequestUrl = TMDbNetworkUtils.buildMoviesURL(criteria);
         String moviesJsonResponse = TMDbNetworkUtils.getResponseFromHttpUrl(moviesRequestUrl);
-        return TMDbJsonUtils.getMoviesFromJson(moviesJsonResponse, posterBasePaths);
+        return TMDbJsonUtils.getMoviesFromJson(moviesJsonResponse, posterBasePaths, backdropBasePaths);
     }
 }
