@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +23,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -32,7 +37,8 @@ import butterknife.ButterKnife;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
 
-public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        BottomNavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
@@ -44,20 +50,20 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private Uri mMovieUri;
     private MovieInfo mMovie;
 
+    @BindView(R.id.pb_movie_detail_loading) ProgressBar mLoading;
+    @BindView(R.id.nv_movie_detail_nav) BottomNavigationView mNavigation;
+    @BindView(R.id.cl_movie_detail_layout) ConstraintLayout mLayout;
     @BindView(R.id.tv_movie_detail_title) TextView mTitle;
     @BindView(R.id.tv_movie_detail_release_date) TextView mReleaseDate;
     @BindView(R.id.tv_movie_detail_rating) TextView mRating;
     @BindView(R.id.iv_movie_detail_poster) ImageView mPoster;
+    @BindView(R.id.iv_movie_detail_backdrop) ImageView mBackdrop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nv_movie_detail_nav);
-        navigation.setOnNavigationItemSelectedListener(new NavigationListener());
-        changeFragment(new MovieDetailsFragment());
 
         // Check if the intent contains expected movie object
         Intent intent = getIntent();
@@ -80,6 +86,18 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         return true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mNavigation.setOnNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mNavigation.setOnNavigationItemSelectedListener(null);
+    }
+
     /**
      * Uses the ShareCompat Intent builder to create intent for sharing. It sets the type
      * of content that is sharing (regular text), the text itself, and returns the created Intent.
@@ -98,6 +116,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case ID_DETAIL_LOADER:
+                showLoading();
                 return new CursorLoader(this,
                         mMovieUri,
                         MovieInfoUtils.MOVIES_PROJECTION,
@@ -125,9 +144,35 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(mMovie.getReleaseDate());
         mRating.setText(Double.toString(mMovie.getRating())+"/10");
-        Picasso.with(this).load(mMovie.getPosterPaths()[0]).into(mPoster);
+        Picasso.with(this)
+                .load(mMovie.getPosterPaths()[0])
+                .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_poster))
+                .into(mPoster);
+        Picasso.with(this)
+                .load(mMovie.getBackdropPaths()[0])
+                .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_backdrop))
+                .into(mBackdrop);
 
-        //changeFragment(MovieDetailsFragment.newInstance(mMovie));
+        showDetails();
+
+        // Use handler to ensure that there is no state loss
+        new Handler(){
+        }.post(new Runnable() {
+            @Override
+            public void run() {
+                changeFragment(MovieDetailsFragment.newInstance(mMovie));
+            }
+        });
+    }
+
+    private void showDetails() {
+        mLayout.setVisibility(View.VISIBLE);
+        mLoading.setVisibility(View.GONE);
+    }
+
+    private void showLoading() {
+        mLayout.setVisibility(View.GONE);
+        mLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -135,27 +180,25 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         // nothing to do
     }
 
-    private class NavigationListener implements BottomNavigationView.OnNavigationItemSelectedListener {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.detail_navigation_info:
-                    //changeFragment(new HomeFragment());
-                    return true;
-                case R.id.detail_navigation_videos:
-                    //changeFragment(new ButtonFragment());
-                    return true;
-                case R.id.detail_navigation_reviews:
-                    //changeFragment(new ItemFragment());
-                    return true;
-            }
-            return false;
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.detail_navigation_info:
+                changeFragment(MovieDetailsFragment.newInstance(mMovie));
+                return true;
+            case R.id.detail_navigation_videos:
+                //changeFragment(new ButtonFragment());
+                return true;
+            case R.id.detail_navigation_reviews:
+                //changeFragment(new ItemFragment());
+                return true;
         }
+        return false;
     }
 
     private void changeFragment(Fragment fm){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content, fm);
+        ft.replace(R.id.movie_detail_nav_content, fm);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commit();

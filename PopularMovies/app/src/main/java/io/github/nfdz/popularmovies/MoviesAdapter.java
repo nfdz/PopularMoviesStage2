@@ -5,6 +5,7 @@ package io.github.nfdz.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import io.github.nfdz.popularmovies.data.MovieContract;
-import io.github.nfdz.popularmovies.types.MovieInfo;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
 
 /**
@@ -82,8 +80,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         /// FIXME
         String[] posterPaths = MovieInfoUtils.splitPaths(mergedPosterPaths);
         // add no poster art meanwhile Picasso is loading the poster
-        holder.mPosterImageView.setImageResource(R.drawable.art_no_poster);
-        Picasso.with(context).load(posterPaths[0]).into(holder.mPosterImageView);
+        Picasso.with(context)
+                .load(posterPaths[0])
+                .placeholder(ContextCompat.getDrawable(context, R.drawable.art_no_poster))
+                .into(holder.mPosterImageView);
     }
 
     @Override

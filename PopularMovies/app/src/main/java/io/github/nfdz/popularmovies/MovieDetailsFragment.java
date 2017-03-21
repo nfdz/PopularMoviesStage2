@@ -10,7 +10,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 
 
@@ -19,6 +22,8 @@ public class MovieDetailsFragment extends Fragment {
     private static final String ARG_MOVIE = "movie";
 
     private MovieInfo mMovieInfo;
+
+    @BindView(R.id.tv_movie_detail_synopsis) TextView mSynopsis;
 
     public MovieDetailsFragment() {
         // Required empty public constructor
@@ -33,9 +38,11 @@ public class MovieDetailsFragment extends Fragment {
      */
     public static MovieDetailsFragment newInstance(MovieInfo movie) {
         MovieDetailsFragment fragment = new MovieDetailsFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_MOVIE, movie);
-        fragment.setArguments(args);
+        if (movie != null) {
+            Bundle args = new Bundle();
+            args.putParcelable(ARG_MOVIE, movie);
+            fragment.setArguments(args);
+        }
         return fragment;
     }
 
@@ -51,7 +58,10 @@ public class MovieDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_movie_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        ButterKnife.bind(this, view);
+        if (mMovieInfo != null) mSynopsis.setText(mMovieInfo.getSynopsis());
+        return view;
     }
 
 }
