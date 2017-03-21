@@ -100,6 +100,12 @@ public class MovieInfo implements Parcelable {
         return mSynopsis;
     }
 
+    /**
+     * This implementation of equals do not use rating, synopsis or poster paths to check
+     * if the other object is the same because these fields could change with time (in internet service).
+     * @param o other object
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,16 +124,17 @@ public class MovieInfo implements Parcelable {
 
     }
 
+    /**
+     * This implementation of hashcode do not use rating, synopsis or poster paths to compute
+     * the hash because these fields could change with time (in internet service).
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         int result;
         long temp;
         result = getTitle() != null ? getTitle().hashCode() : 0;
         result = 31 * result + (getReleaseDate() != null ? getReleaseDate().hashCode() : 0);
-        temp = Double.doubleToLongBits(getRating());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (getPosterPaths() != null ? Arrays.hashCode(getPosterPaths()) : 0);
-        result = 31 * result + (getSynopsis() != null ? getSynopsis().hashCode() : 0);
         return result;
     }
 

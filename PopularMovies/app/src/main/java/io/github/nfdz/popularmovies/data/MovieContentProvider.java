@@ -52,19 +52,19 @@ public class MovieContentProvider extends ContentProvider {
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         switch (sUriMatcher.match(uri)) {
             case CODE_MOVIES:
-                return bulkInsertForTable(MovieContract.MovieEntry.TABLE_NAME, uri, values);
+                return bulkInsertInTable(MovieContract.MovieEntry.TABLE_NAME, uri, values);
             case CODE_POPULAR_MOVIES:
-                return bulkInsertForTable(MovieContract.PopularMovieEntry.TABLE_NAME, uri, values);
+                return bulkInsertInTable(MovieContract.PopularMovieEntry.TABLE_NAME, uri, values);
             case CODE_HIGHEST_RATED_MOVIES:
-                return bulkInsertForTable(MovieContract.HighestRatedMovieEntry.TABLE_NAME, uri, values);
+                return bulkInsertInTable(MovieContract.HighestRatedMovieEntry.TABLE_NAME, uri, values);
             case CODE_FAVORITE_MOVIES:
-                return bulkInsertForTable(MovieContract.FavoriteMovieEntry.TABLE_NAME, uri, values);
+                return bulkInsertInTable(MovieContract.FavoriteMovieEntry.TABLE_NAME, uri, values);
             default:
                 return super.bulkInsert(uri, values);
         }
     }
 
-    private int bulkInsertForTable(String tableName, Uri uri, ContentValues[] values) {
+    private int bulkInsertInTable(String tableName, Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         db.beginTransaction();
         int rowsInserted = 0;
@@ -170,7 +170,7 @@ public class MovieContentProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
 
         int numRowsDeleted;
-        if (selection == null) selection = "1";
+        if (selection == null || selection.isEmpty()) selection = "1";
 
         switch (sUriMatcher.match(uri)) {
             case CODE_MOVIES:
@@ -221,34 +221,38 @@ public class MovieContentProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         String tableName;
         Uri returnUri;
+        long id;
         switch (sUriMatcher.match(uri)) {
             case CODE_MOVIES:
-                returnUri = MovieContract.MovieEntry.CONTENT_URI;
-                tableName = MovieContract.MovieEntry.TABLE_NAME;
+                id = insertInTable(MovieContract.MovieEntry.TABLE_NAME, contentValues);
+                returnUri = MovieContract.MovieEntry.buildUriWithId(id);
                 break;
             case CODE_POPULAR_MOVIES:
+                id = insertInTable(MovieContract.PopularMovieEntry.TABLE_NAME, contentValues);
                 returnUri = MovieContract.PopularMovieEntry.CONTENT_URI;
-                tableName = MovieContract.PopularMovieEntry.TABLE_NAME;
                 break;
             case CODE_HIGHEST_RATED_MOVIES:
+                id = insertInTable(MovieContract.HighestRatedMovieEntry.TABLE_NAME, contentValues);
                 returnUri = MovieContract.HighestRatedMovieEntry.CONTENT_URI;
-                tableName = MovieContract.HighestRatedMovieEntry.TABLE_NAME;
                 break;
             case CODE_FAVORITE_MOVIES:
+                id = insertInTable(MovieContract.FavoriteMovieEntry.TABLE_NAME, contentValues);
                 returnUri = MovieContract.FavoriteMovieEntry.CONTENT_URI;
-                tableName = MovieContract.FavoriteMovieEntry.TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        long _id = db.insert(tableName, null, contentValues);
-        if (_id != -1) {
+        if (id != -1) {
             getContext().getContentResolver().notifyChange(uri, null);
         } else {
             throw new android.database.SQLException("Can not insert a row in: " + uri);
         }
         return returnUri;
+    }
+
+    private long insertInTable(String tableName, ContentValues contentValues) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        return db.insert(tableName, null, contentValues);
     }
 
     @Override

@@ -44,12 +44,12 @@ public class TMDbJsonUtils {
      * object that contains all information in application data model way.
      *
      * @param moviesJsonStr JSON response from server for any kind of movies request.
-     * @param postersBasePath Configured base path for movie poster images.
+     * @param postersBasePaths Configured base paths for movie poster images.
      * @return List of MovieInfo objects.
      * @throws TMDbException If JSON data cannot be properly parsed.
      */
     public static List<MovieInfo> getMoviesFromJson(String moviesJsonStr,
-                                                    String postersBasePath) throws TMDbException {
+                                                    String[] postersBasePaths) throws TMDbException {
         try {
             List<MovieInfo> result = new ArrayList<MovieInfo>();
             JSONObject moviesJson = new JSONObject(moviesJsonStr);
@@ -57,13 +57,17 @@ public class TMDbJsonUtils {
 
             for (int i = 0; i < resultsNode.length(); i++) {
                 JSONObject movieNode = resultsNode.getJSONObject(i);
-                String posterPath = postersBasePath + movieNode.getString(POSTER_NODE);
+                String posterRes = movieNode.getString(POSTER_NODE);
+                String[] posterPaths = new String[postersBasePaths.length];
+                for (int j = 0; j < postersBasePaths.length; j++) {
+                    posterPaths[j] = postersBasePaths[j] + posterRes;
+                }
                 String synopsis = movieNode.getString(SYNOPSIS_NODE);
                 String title = movieNode.getString(TITLE_NODE);
                 String releaseDate = movieNode.getString(RELEASE_NODE);
                 double rating = movieNode.getDouble(VOTE_AVG_NODE);
 
-                MovieInfo movie = new MovieInfo(title, releaseDate, rating, synopsis, posterPath);
+                MovieInfo movie = new MovieInfo(title, releaseDate, rating, synopsis, posterPaths);
                 result.add(movie);
             }
             return result;
@@ -77,12 +81,10 @@ public class TMDbJsonUtils {
      * for all movie poster images.
      *
      * @param configJsonStr JSON response from server for configuration request.
-     * @param minPosterWidth Desired minimum width of the poster images in pixels.
-     * @return Base path URL for all movie poster images.
+     * @return Base paths URLs for all movie poster images.
      * @throws TMDbException If JSON data cannot be properly parsed.
      */
-    public static String getPosterBasePathFromJson(String configJsonStr,
-                                                   int minPosterWidth) throws TMDbException {
+    public static String[] getPosterBasePathsFromJson(String configJsonStr) throws TMDbException {
         try {
             JSONObject configJson = new JSONObject(configJsonStr);
             JSONObject imagesConfJson = configJson.getJSONObject(IMAGES_NODE);
@@ -93,13 +95,11 @@ public class TMDbJsonUtils {
             if (length <= 0) {
                 throw new TMDbException(ERROR_NO_DATA);
             }
-            List<String> sizes = new ArrayList<>();
+            String[] sizes = new String[length];
             for (int i = 0; i < length; i++) {
-                sizes.add(sizesArray.getString(i));
+                sizes[i] = baseUrl + sizesArray.getString(i);
             }
-            String size = resolveSize(sizes, minPosterWidth);
-
-            return baseUrl + size;
+            return sizes;
         } catch(JSONException e) {
             throw new TMDbException(ERROR_JSON, e);
         }

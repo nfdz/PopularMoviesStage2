@@ -22,9 +22,6 @@ import io.github.nfdz.popularmovies.types.MovieInfo;
 
 public class DetailActivity extends AppCompatActivity {
 
-    /** Expected key to store MovieInfo data as extra Parcelable date inside intent */
-    public final static String INTENT_KEY = "MOVIE";
-
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     private static final String MOVIE_SHARE_FORMAT = "Let's watch this movie! \"%s\" #PopularMoviesApp";
@@ -46,8 +43,8 @@ public class DetailActivity extends AppCompatActivity {
 
         // Check if the intent contains expected movie object
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(INTENT_KEY)) {
-            mMovie = intent.getParcelableExtra(INTENT_KEY);
+        if (intent != null && intent.hasExtra("asdf")) {
+            mMovie = intent.getParcelableExtra("asdf");
             // Set this activity title the movie title
             setTitle(mMovie.getTitle());
             // Set movie data in ui views

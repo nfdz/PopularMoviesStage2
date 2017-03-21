@@ -4,6 +4,7 @@
 package io.github.nfdz.popularmovies;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +16,32 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.github.nfdz.popularmovies.data.MovieContract;
 import io.github.nfdz.popularmovies.types.MovieInfo;
+import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
 
 /**
  * This class a recycler view adapter and manage the creation and binding of movie ui items.
  */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-    /** List of movies to show, it could be null */
-    private List<MovieInfo> mMoviesData;
+    public static final String[] PROJECTION = {
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_TITLE,
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_RATING,
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_POSTER_PATHS
+    };
+
+    public static final int INDEX_MOVIE_ID = 0;
+    public static final int INDEX_MOVIE_TITLE = 1;
+    public static final int INDEX_MOVIE_RELEASE_DATE = 2;
+    public static final int INDEX_MOVIE_RATING = 3;
+    public static final int INDEX_MOVIE_POSTER_PATHS = 4;
+
+
+    /** This cursor has got the movies to show, it could be null */
+    private Cursor mCursor;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 
@@ -31,7 +49,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
      * The interface that receives onClick messages.
      */
     public interface MoviesAdapterOnClickHandler {
-        void onClick(MovieInfo movie);
+        void onClick(long id);
     }
 
     /**
@@ -49,34 +67,41 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         int layoutId = R.layout.movies_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParent = false;
-
         View view = inflater.inflate(layoutId, parent, shouldAttachToParent);
         return new MoviesAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
-        MovieInfo movie = mMoviesData.get(position);
-        holder.mTitleTextView.setText(movie.getTitle());
-        holder.mRatingTextView.setText(Double.toString(movie.getRating())+"/10");
+        mCursor.moveToPosition(position);
+        holder.mTitleTextView.setText(mCursor.getString(INDEX_MOVIE_TITLE) +
+                " (" + mCursor.getString(INDEX_MOVIE_RELEASE_DATE) + ")");
+        holder.mRatingTextView.setText(Double.toString(mCursor.getDouble(INDEX_MOVIE_RATING))+"/10");
         Context context = holder.mPosterImageView.getContext();
+        String mergedPosterPaths = mCursor.getString(INDEX_MOVIE_POSTER_PATHS);
+        String[] posterPaths = MovieInfoUtils.splitPosterPaths(mergedPosterPaths);
         // add no poster art meanwhile Picasso is loading the poster
         holder.mPosterImageView.setImageResource(R.drawable.art_no_poster);
-        Picasso.with(context).load(movie.getPosterPaths()[0]).into(holder.mPosterImageView);
+        Picasso.with(context).load(posterPaths[0]).into(holder.mPosterImageView);
     }
 
     @Override
     public int getItemCount() {
-        return mMoviesData != null ? mMoviesData.size() : 0;
+        return mCursor != null ? mCursor.getCount() : 0;
     }
 
     /**
-     * This methods update movies data list with given one and refresh the view.
+     * This methods update data cursor with the given one and refresh the view.
+     * It closes the old cursor if it is not the same that the given one.
      *
-     * @param movies List of movies. Null object is the same than an empty list.
+     * @param cursor
      */
-    public void setMoviesData(List<MovieInfo> movies) {
-        mMoviesData = movies;
+    public void setCursor(Cursor cursor) {
+        if (mCursor != cursor) {
+            Cursor oldCursor = mCursor;
+            mCursor = cursor;
+            if (oldCursor != null) oldCursor.close();
+        }
         notifyDataSetChanged();
     }
 
@@ -105,8 +130,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            MovieInfo movie = mMoviesData.get(adapterPosition);
-            mClickHandler.onClick(movie);
+            mCursor.moveToPosition(adapterPosition);
+            long id = mCursor.getLong(INDEX_MOVIE_ID);
+            mClickHandler.onClick(id);
         }
     }
 }

@@ -21,32 +21,6 @@
         android:scrollbars="vertical"
         android:visibility="invisible" />
 
-    <!--This LinearLayout shows error information-->
-    <LinearLayout
-        android:id="@+id/layout_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="invisible"
-        android:layout_gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/error_message"
-            android:padding="10dp"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:text="@string/button_retry"
-            android:onClick="onRetryButtonClick"/>
-
-    </LinearLayout>
-
     <!--This ProgressBar represents that activity is requesting movies data-->
     <ProgressBar
         android:id="@+id/pb_loading_indicator"

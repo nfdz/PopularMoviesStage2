@@ -66,6 +66,10 @@ public class MovieContract {
         public static Uri buildUriWithId(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static long extractIdFromUri(Uri uri) {
+            return ContentUris.parseId(uri);
+        }
     }
 
     /**

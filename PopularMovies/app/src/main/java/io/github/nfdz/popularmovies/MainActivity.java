@@ -6,8 +6,13 @@ package io.github.nfdz.popularmovies;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,11 +29,14 @@ import android.widget.ProgressBar;
 import java.util.List;
 
 import io.github.nfdz.popularmovies.MoviesAdapter.MoviesAdapterOnClickHandler;
+import io.github.nfdz.popularmovies.data.MovieContract;
+import io.github.nfdz.popularmovies.sync.MoviesSyncUtils;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 import io.github.nfdz.popularmovies.types.AsyncTaskListener;
 import io.github.nfdz.popularmovies.utilities.TMDbNetworkUtils;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity
+        implements MoviesAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor>{
 
     /** Minimum aspect ratio to set landscape mode (grid has more columns) */
     private static final float LANDSCAPE_MODE_MIN_RATIO = 0.75f;
@@ -36,14 +44,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
     /** Sort criteria configuration */
     private static int sSortCriteria = TMDbNetworkUtils.MOST_POPULAR_FLAG;
 
+    private static final int ID_MOVIES_LOADER = 82;
+
     // Activity views
     private RecyclerView mRecyclerView;
-    private LinearLayout mErrorLayout;
     private ProgressBar mLoadingIndicator;
 
     private MoviesAdapter mMoviesAdapter;
-
-    private int mMinPosterWidth = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +58,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movies);
-        mErrorLayout = (LinearLayout) findViewById(R.id.layout_error);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-
-        // TODO: Instead use only one min poster width it could use two (thumbnail and detail)
-        mMinPosterWidth = getResources().getDimensionPixelSize(R.dimen.movie_item_poster_width);
 
         // Compute aspect ratio and decide number of columns of the grid view
         float aspectRatio = computeAspectRatio();
@@ -76,8 +79,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
         // Uncomment this line to know the network(response time, cache, etc) performance of poster images
         //Picasso.with(getApplicationContext()).setIndicatorsEnabled(true);
 
-        // Load movies in grid view by default
-        loadMovies();
+        getSupportLoaderManager().initLoader(ID_MOVIES_LOADER, null, this);
+
+        MoviesSyncUtils.initialize(this);
     }
 
     /**
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
                     if (selection != selected) {
                         sSortCriteria = selection == 0 ? TMDbNetworkUtils.MOST_POPULAR_FLAG
                                                        : TMDbNetworkUtils.HIGHEST_RATED_FLAG;
-                        loadMovies();
+                        getSupportLoaderManager().restartLoader(ID_MOVIES_LOADER, null, MainActivity.this);
                     }
                 }
             });
@@ -130,65 +134,63 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapterOnCl
         }
     }
 
-    /**
-     * This methods launches the process of request movies data (that finally updates ui views).
-     */
-    private void loadMovies() {
-        mMoviesAdapter.setMoviesData(null);
-        showMoviesView();
-        new FetchMoviesTask(mMinPosterWidth, new FetchMoviesTaskListener()).execute(sSortCriteria);
-    }
 
     /**
      * Show movies ui views and hide the others.
      */
     private void showMoviesView() {
         mRecyclerView.setVisibility(View.VISIBLE);
-        mErrorLayout.setVisibility(View.INVISIBLE);
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Show errors ui views and hide the others.
      */
-    private void showErrorView() {
+    private void showLoading() {
         mRecyclerView.setVisibility(View.INVISIBLE);
-        mErrorLayout.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * This method launches the process of request movies data.
-     * It is called by retry button that is an ui error view.
-     * @param button View button
-     */
-    protected void onRetryButtonClick(View button) {
-        loadMovies();
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onClick(MovieInfo movie) {
+    public void onClick(long id) {
         Context context = this;
         Class destination = DetailActivity.class;
         Intent intentToDetailActivity = new Intent(context, destination);
-        intentToDetailActivity.putExtra(DetailActivity.INTENT_KEY, movie);
+        intentToDetailActivity.setData(MovieContract.MovieEntry.buildUriWithId(id));
         startActivity(intentToDetailActivity);
     }
 
-    private class FetchMoviesTaskListener implements AsyncTaskListener<List<MovieInfo>> {
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+        switch (loaderId) {
 
-        @Override
-        public void onPreTaskExecution() {
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
+            case ID_MOVIES_LOADER:
+                Uri queryUri = MovieContract.PopularMovieEntry.CONTENT_URI;
+                String sortOrder = MovieContract.PopularMovieEntry.TABLE_NAME + "." +
+                    MovieContract.PopularMovieEntry._ID + " ASC";
+                return new CursorLoader(this,
+                        queryUri,
+                        MoviesAdapter.PROJECTION,
+                        null,
+                        null,
+                        sortOrder);
 
-        @Override
-        public void onTaskComplete(List<MovieInfo> moviesData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (moviesData != null) {
-                showMoviesView();
-                mMoviesAdapter.setMoviesData(moviesData);
-            } else {
-                showErrorView();
-            }
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
         }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mMoviesAdapter.setCursor(data);
+        // TODO save position
+        // if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        // mRecyclerView.smoothScrollToPosition(mPosition);
+        if (data != null && data.getCount() != 0) showMoviesView();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMoviesAdapter.setCursor(null);
     }
 }
