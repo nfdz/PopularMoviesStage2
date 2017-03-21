@@ -6,6 +6,7 @@ package io.github.nfdz.popularmovies;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,7 +36,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.nfdz.popularmovies.types.MovieInfo;
+import io.github.nfdz.popularmovies.utilities.FavoritesUtils;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -58,6 +62,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @BindView(R.id.tv_movie_detail_rating) TextView mRating;
     @BindView(R.id.iv_movie_detail_poster) ImageView mPoster;
     @BindView(R.id.iv_movie_detail_backdrop) ImageView mBackdrop;
+    @BindView(R.id.ib_movie_fav) ImageButton mFavButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +158,13 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_backdrop))
                 .into(mBackdrop);
 
+        FavoritesUtils.resolveFavorite(this, mMovie.getMovieId(), new FavoritesUtils.ResolveFavoriteCallback() {
+            @Override
+            public void notifyResult(boolean isFavorite) {
+                setFavorite(isFavorite);
+            }
+        });
+
         showDetails();
 
         // Use handler to ensure that there is no state loss
@@ -173,6 +185,26 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private void showLoading() {
         mLayout.setVisibility(View.GONE);
         mLoading.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.ib_movie_fav)
+    public void toggleFav() {
+        if (mMovie == null) return;
+        FavoritesUtils.toggleFavorite(this, mMovie.getMovieId(),  new FavoritesUtils.ResolveFavoriteCallback() {
+            @Override
+            public void notifyResult(boolean isFavorite) {
+                setFavorite(isFavorite);
+            }
+        });
+    }
+
+    private void setFavorite(boolean isFavorite) {
+        mFavButton.setVisibility(View.VISIBLE);
+        if (isFavorite) {
+            mFavButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.art_favorite_on));
+        } else {
+            mFavButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.art_favorite_off));
+        }
     }
 
     @Override

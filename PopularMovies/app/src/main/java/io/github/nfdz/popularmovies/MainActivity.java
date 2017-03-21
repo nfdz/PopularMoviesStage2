@@ -220,9 +220,10 @@ public class MainActivity extends AppCompatActivity
                     sortOrder = MovieContract.HighestRatedMovieEntry.TABLE_NAME + "." +
                             MovieContract.HighestRatedMovieEntry._ID + " ASC";
                 } else if (flag == FAVORITES_FLAG) {
+                    // in this case show latest inserted movies first
                     queryUri = MovieContract.FavoriteMovieEntry.CONTENT_URI;
                     sortOrder = MovieContract.FavoriteMovieEntry.TABLE_NAME + "." +
-                            MovieContract.FavoriteMovieEntry._ID + " ASC";
+                            MovieContract.FavoriteMovieEntry._ID + " DESC";
                 } else {
                     throw new IllegalArgumentException("Unknown sort by flag: " + flag);
                 }

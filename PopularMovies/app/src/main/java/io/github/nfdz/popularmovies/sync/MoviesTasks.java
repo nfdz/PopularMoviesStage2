@@ -29,12 +29,34 @@ public class MoviesTasks {
     private static final String TAG = MoviesTasks.class.getSimpleName();
     private static final String ERROR_FETCH_MOVIES = "There was an error retrieving movies data. Criteria: ";
 
-    public static final String ACTION_SYNC_MOVIES = "increment-water-count";
+    public static final String ACTION_SYNC_MOVIES = "sync-movies";
+    public static final String ACTION_INSERT_FAVORITE = "insert-favorite";
+    public static final String ACTION_REMOVE_FAVORITE = "remove-favorite";
 
     public static void executeTask(Context context, String action, Uri data) {
         if (ACTION_SYNC_MOVIES.equals(action)) {
             syncMovies(context);
+        } else if (ACTION_INSERT_FAVORITE.equals(action)) {
+            long movieId = MovieContract.MovieEntry.extractIdFromUri(data);
+            insertFavorite(context, movieId);
+        } else if (ACTION_REMOVE_FAVORITE.equals(action)) {
+            long movieId = MovieContract.MovieEntry.extractIdFromUri(data);
+            removeFavorite(context, movieId);
         }
+    }
+
+    public static void insertFavorite(Context context, long movieId) {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID, movieId);
+        context.getContentResolver().insert(MovieContract.FavoriteMovieEntry.CONTENT_URI, values);
+    }
+
+    public static void removeFavorite(Context context, long movieId) {
+        String where = MovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID + "=" + movieId;
+        context.getContentResolver().delete(
+                MovieContract.FavoriteMovieEntry.CONTENT_URI,
+                where,
+                null);
     }
 
     /**
