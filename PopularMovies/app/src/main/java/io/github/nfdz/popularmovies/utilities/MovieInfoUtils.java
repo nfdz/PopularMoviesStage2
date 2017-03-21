@@ -21,7 +21,6 @@ public class MovieInfoUtils {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_RATING,
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_SYNOPSIS,
-            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_HAS_VIDEO,
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_POSTER_PATHS,
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_BACKDROP_PATHS
     };
@@ -31,9 +30,8 @@ public class MovieInfoUtils {
     public static final int INDEX_MOVIE_RELEASE_DATE = 2;
     public static final int INDEX_MOVIE_RATING = 3;
     public static final int INDEX_MOVIE_SYNOPSIS = 4;
-    public static final int INDEX_MOVIE_HAS_VIDEO = 5;
-    public static final int INDEX_MOVIE_POSTER_PATHS = 6;
-    public static final int INDEX_MOVIE_BACKDROP_PATHS = 7;
+    public static final int INDEX_MOVIE_POSTER_PATHS = 5;
+    public static final int INDEX_MOVIE_BACKDROP_PATHS = 6;
 
     public static final String PATHS_SEPARATOR = ";";
 
@@ -47,7 +45,6 @@ public class MovieInfoUtils {
             String releaseDate = cursor.getString(INDEX_MOVIE_RELEASE_DATE);
             double rating = cursor.getDouble(INDEX_MOVIE_RATING);
             String synopsis = cursor.getString(INDEX_MOVIE_SYNOPSIS);
-            boolean hasVideo = cursor.getInt(INDEX_MOVIE_HAS_VIDEO) == 1;
             String mergedPosterPaths = cursor.getString(INDEX_MOVIE_POSTER_PATHS);
             String[] posterPaths = splitPaths(mergedPosterPaths);
             String mergedBackdropPaths = cursor.getString(INDEX_MOVIE_BACKDROP_PATHS);
@@ -57,7 +54,6 @@ public class MovieInfoUtils {
                                          releaseDate,
                                          rating,
                                          synopsis,
-                                         hasVideo,
                                          posterPaths,
                                          backdropPaths));
         }
@@ -84,7 +80,6 @@ public class MovieInfoUtils {
         values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         values.put(MovieContract.MovieEntry.COLUMN_RATING, movie.getRating());
         values.put(MovieContract.MovieEntry.COLUMN_SYNOPSIS, movie.getSynopsis());
-        values.put(MovieContract.MovieEntry.COLUMN_HAS_VIDEO, movie.hasVideo() ? 1 : 0);
         values.put(MovieContract.MovieEntry.COLUMN_POSTER_PATHS, mergePaths(movie.getPosterPaths()));
         values.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATHS, mergePaths(movie.getBackdropPaths()));
         return values;

@@ -14,7 +14,7 @@ import io.github.nfdz.popularmovies.data.MovieContract.MovieEntry;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movies.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);

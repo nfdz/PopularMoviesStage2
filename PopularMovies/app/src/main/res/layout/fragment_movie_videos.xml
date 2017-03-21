@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_movie_detail_no_videos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="This movie has no trailer videos available."
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="invisible"  />
+
+    <ProgressBar
+        android:id="@+id/pb_movie_detail_videos_loading"
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
+    <!--This RecyclerView shows videos -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movie_details_videos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:visibility="invisible" />
+
+</FrameLayout>

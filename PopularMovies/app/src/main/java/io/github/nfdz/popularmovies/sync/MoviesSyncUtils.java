@@ -75,6 +75,7 @@ public class MoviesSyncUtils {
                         null,
                         null,
                         null);
+
                 if (cursor == null || cursor.getCount() == 0) {
                     startImmediateSync(context);
                 }

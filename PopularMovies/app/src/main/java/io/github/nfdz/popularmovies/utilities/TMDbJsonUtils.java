@@ -37,7 +37,6 @@ public class TMDbJsonUtils {
     private static final String RELEASE_NODE = "release_date";
     private static final String VOTE_AVG_NODE = "vote_average";
     private static final String BACKDROP_AVG_NODE = "backdrop_path";
-    private static final String HAS_VIDEO_NODE = "video";
 
 
     // Configuration JSON object nodes
@@ -76,7 +75,6 @@ public class TMDbJsonUtils {
                 String title = movieNode.getString(TITLE_NODE);
                 String releaseDate = movieNode.getString(RELEASE_NODE);
                 double rating = movieNode.getDouble(VOTE_AVG_NODE);
-                boolean hasVideo = movieNode.getBoolean(HAS_VIDEO_NODE);
 
                 String posterRes = movieNode.getString(POSTER_NODE);
                 String[] posterPaths = new String[posterBasePaths.length];
@@ -95,7 +93,6 @@ public class TMDbJsonUtils {
                                                 releaseDate,
                                                 rating,
                                                 synopsis,
-                                                hasVideo,
                                                 posterPaths,
                                                 backdropPaths);
                 result.add(movie);

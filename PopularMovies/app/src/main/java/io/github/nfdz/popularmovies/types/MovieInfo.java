@@ -19,9 +19,6 @@ public class MovieInfo implements Parcelable {
     /** Image backdrop paths */
     private final String[] mBackdropPaths;
 
-    /** Has video flag */
-    private final boolean mHasVideo;
-
     /** Movie title */
     private final String mTitle;
 
@@ -51,7 +48,6 @@ public class MovieInfo implements Parcelable {
                      String releaseDate,
                      double rating,
                      String synopsis,
-                     boolean hasVideo,
                      String[] posterPaths,
                      String[] backdropPaths) {
         mMovieId = movieId;
@@ -59,7 +55,6 @@ public class MovieInfo implements Parcelable {
         mReleaseDate = releaseDate;
         mRating = rating;
         mSynopsis = synopsis;
-        mHasVideo = hasVideo;
         mPosterPaths = posterPaths;
         mBackdropPaths = backdropPaths;
     }
@@ -74,7 +69,6 @@ public class MovieInfo implements Parcelable {
         mReleaseDate = in.readString();
         mRating = in.readDouble();
         mSynopsis = in.readString();
-        mHasVideo = in.readByte() != 0;
 
         int postersSize = in.readInt();
         mPosterPaths = new String[postersSize];
@@ -132,10 +126,6 @@ public class MovieInfo implements Parcelable {
         return mBackdropPaths;
     }
 
-    public boolean hasVideo() {
-        return mHasVideo;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -163,7 +153,6 @@ public class MovieInfo implements Parcelable {
         parcel.writeString(mReleaseDate);
         parcel.writeDouble(mRating);
         parcel.writeString(mSynopsis);
-        parcel.writeByte((byte) (mHasVideo ? 1 : 0));
 
         parcel.writeInt(mPosterPaths.length);
         for (String posterPath : mPosterPaths) {

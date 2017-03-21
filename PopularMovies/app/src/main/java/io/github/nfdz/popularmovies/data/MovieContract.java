@@ -49,9 +49,6 @@ public class MovieContract {
         /** Movie synopsis. Stored as string. */
         public static final String COLUMN_SYNOPSIS = "synopsis";
 
-        /** Movie synopsis. Stored as string. */
-        public static final String COLUMN_HAS_VIDEO = "has_video";
-
         /**
          * Movie poster paths. Stored as string.
          * This is string contains a list of concatenated paths.
@@ -69,7 +66,6 @@ public class MovieContract {
                 COLUMN_TITLE          + " TEXT NOT NULL, " +
                 COLUMN_RELEASE_DATE   + " TEXT NOT NULL, " +
                 COLUMN_RATING         + " REAL NOT NULL, " +
-                COLUMN_HAS_VIDEO      + " INTEGER NOT NULL, " +
                 COLUMN_POSTER_PATHS   + " TEXT NOT NULL, " +
                 COLUMN_BACKDROP_PATHS + " TEXT NOT NULL, " +
                 COLUMN_SYNOPSIS       + " TEXT NOT NULL);";

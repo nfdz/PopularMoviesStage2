@@ -90,6 +90,7 @@ public class MoviesTasks {
                 null,
                 null);
         Map<Integer, MovieInfo> favoriteMovies = MovieInfoUtils.getMoviesFromCursor(favoritesCursor);
+        favoritesCursor.close();
 
         // delete all information about popular and highest rated movies
         contentResolver.delete(
@@ -101,11 +102,25 @@ public class MoviesTasks {
                 null,
                 null);
         // delete all movies that are not saved as favorites
-        String where = buildDeleteSqlWhereNotIds(favoriteMovies.keySet());
-        contentResolver.delete(
-                MovieContract.PopularMovieEntry.CONTENT_URI,
-                where,
+        String[] projection = { MovieContract.MovieEntry._ID };
+        int idColumn = 0;
+        Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
                 null);
+        int removed = 0;
+        while (cursor.moveToNext()) {
+            String movieIdString = cursor.getString(idColumn);
+            if (!favoriteMovies.keySet().contains(Integer.parseInt(movieIdString))) {
+                removed += contentResolver.delete(
+                        MovieContract.MovieEntry.CONTENT_URI,
+                        MovieContract.MovieEntry._ID + "=" + movieIdString,
+                        null);
+            }
+        }
+        cursor.close();
+
 
         // insert popular movies (avoid insert already contained movies)
         Map<Integer, MovieInfo> insertedPopularMovies = new HashMap<>();
@@ -137,20 +152,6 @@ public class MoviesTasks {
             popularValues.put(MovieContract.HighestRatedMovieEntry.COLUMN_MOVIE_ID, movie.getMovieId());
             contentResolver.insert(MovieContract.HighestRatedMovieEntry.CONTENT_URI, popularValues);
         }
-    }
-
-    private static String buildDeleteSqlWhereNotIds(Set<Integer> ids) {
-        StringBuilder whereBuilder = new StringBuilder();
-        Iterator<Integer> it = ids.iterator();
-        while (it.hasNext()) {
-            whereBuilder.append("(");
-            whereBuilder.append(MovieContract.MovieEntry._ID);
-            whereBuilder.append(" <> ");
-            whereBuilder.append(it.next());
-            whereBuilder.append(")");
-            if (it.hasNext()) whereBuilder.append(" AND ");
-        }
-        return whereBuilder.toString();
     }
 
     private static List<MovieInfo> fetchMoviesWithCriteria(int criteria) throws TMDbException {

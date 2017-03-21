@@ -86,7 +86,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.detail, menu);
-        //MenuItem shareItem = menu.findItem(R.id.action_share);
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        // FIXME
         //shareItem.setIntent(createShareMovieIntent());
         return true;
     }
@@ -219,7 +220,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 changeFragment(MovieDetailsFragment.newInstance(mMovie));
                 return true;
             case R.id.detail_navigation_videos:
-                //changeFragment(new ButtonFragment());
+                changeFragment(MovieVideosFragment.newInstance(mMovie));
                 return true;
             case R.id.detail_navigation_reviews:
                 //changeFragment(new ItemFragment());
@@ -232,7 +233,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.movie_detail_nav_content, fm);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.addToBackStack(null);
         ft.commit();
     }
 
