@@ -48,7 +48,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @BindView(R.id.tv_movie_detail_release_date) TextView mReleaseDate;
     @BindView(R.id.tv_movie_detail_rating) TextView mRating;
     @BindView(R.id.iv_movie_detail_poster) ImageView mPoster;
-    @BindView(R.id.iv_movie_detail_backdrop) ImageView mBackdrop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +126,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mReleaseDate.setText(mMovie.getReleaseDate());
         mRating.setText(Double.toString(mMovie.getRating())+"/10");
         Picasso.with(this).load(mMovie.getPosterPaths()[0]).into(mPoster);
-        Picasso.with(this).load(mMovie.getBackdropPaths()[0]).into(mBackdrop);
 
         //changeFragment(MovieDetailsFragment.newInstance(mMovie));
     }
