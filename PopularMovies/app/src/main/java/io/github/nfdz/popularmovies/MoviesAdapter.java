@@ -75,7 +75,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         holder.mTitleTextView.setText(mCursor.getString(INDEX_MOVIE_TITLE) +
-                " (" + mCursor.getString(INDEX_MOVIE_RELEASE_DATE) + ")");
+                " (" + getYear(mCursor.getString(INDEX_MOVIE_RELEASE_DATE)) + ")");
         holder.mRatingTextView.setText(Double.toString(mCursor.getDouble(INDEX_MOVIE_RATING))+"/10");
         Context context = holder.mPosterImageView.getContext();
         String mergedPosterPaths = mCursor.getString(INDEX_MOVIE_POSTER_PATHS);
@@ -103,6 +103,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
             if (oldCursor != null) oldCursor.close();
         }
         notifyDataSetChanged();
+    }
+
+    /**
+     * Release date is like YYYY-MM. It has to extract the first four chars.
+     * @param realeaseDate
+     * @return year
+     */
+    private String getYear(String realeaseDate) {
+        if (realeaseDate.length() < 4) return realeaseDate;
+        return realeaseDate.substring(0, 4);
     }
 
     /**
