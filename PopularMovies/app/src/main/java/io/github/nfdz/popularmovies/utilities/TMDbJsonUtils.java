@@ -11,7 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.github.nfdz.popularmovies.types.MovieInfo;
 
@@ -44,6 +46,15 @@ public class TMDbJsonUtils {
     private static final String URL_NODE = "base_url";
     private static final String POSTER_SIZES_NODE = "poster_sizes";
     private static final String BACKDROP_SIZES_NODE = "backdrop_sizes";
+
+    // Movie videos JSON object nodes
+    private static final String VIDEO_RESULTS_NODE = "results";
+    private static final String VIDEO_KEY_NODE = "key";
+    private static final String VIDEO_SITE_NODE = "site";
+    private static final String VIDEO_NAME_NODE = "name";
+
+    private static final String YOUTUBE_SITE = "YouTube";
+    private static final String YOUTUBE_BASE_PATH = "https://www.youtube.com/watch?v=";
 
     private static final String ERROR_CODE_NODE = "status_code";
     private static final int ERROR_CODE_API = 7;
@@ -144,6 +155,37 @@ public class TMDbJsonUtils {
                 sizes[i] = baseUrl + sizesArray.getString(i);
             }
             return sizes;
+        } catch(JSONException e) {
+            throw new TMDbException(ERROR_JSON, e);
+        }
+    }
+
+
+    /**
+     * This method gets and builds youtube video paths contained in given JSON.
+     * It ignores any other video website because it does not know how to compose the path.
+     * @param videosJsonStr
+     * @return A map with video name as key and video path as value.
+     * @throws TMDbException
+     */
+    public static Map<String, String> getVideoPathsFromJson(String videosJsonStr) throws TMDbException {
+        try {
+            JSONObject videosJson = new JSONObject(videosJsonStr);
+            checkNoErrorCode(videosJson);
+            JSONArray resultsNode = videosJson.getJSONArray(VIDEO_RESULTS_NODE);
+            Map<String, String> videoPaths = new HashMap<>();
+            for (int i = 0; i < resultsNode.length(); i++) {
+                JSONObject videoNode = resultsNode.getJSONObject(i);
+                String videoSite = videoNode.getString(VIDEO_SITE_NODE);
+                // check that the site is youtube
+                if (videoSite.toLowerCase().equals(YOUTUBE_SITE.toLowerCase())) {
+                    String videoName = videoNode.getString(VIDEO_NAME_NODE);
+                    String videoKey = videoNode.getString(VIDEO_KEY_NODE);
+                    String videoPath = YOUTUBE_BASE_PATH + videoKey;
+                    videoPaths.put(videoName, videoPath);
+                }
+            }
+            return videoPaths;
         } catch(JSONException e) {
             throw new TMDbException(ERROR_JSON, e);
         }

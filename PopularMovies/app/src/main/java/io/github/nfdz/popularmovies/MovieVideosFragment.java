@@ -4,31 +4,40 @@
 package io.github.nfdz.popularmovies;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.nfdz.popularmovies.sync.MoviesTasks;
 import io.github.nfdz.popularmovies.types.MovieInfo;
+import io.github.nfdz.popularmovies.utilities.TMDbException;
+import io.github.nfdz.popularmovies.utilities.TMDbJsonUtils;
+import io.github.nfdz.popularmovies.utilities.TMDbNetworkUtils;
 
-public class MovieVideosFragment  extends Fragment implements LoaderManager.LoaderCallbacks<String[]> {
+public class MovieVideosFragment  extends Fragment implements LoaderManager.LoaderCallbacks<Map<String, String>> {
 
+    private static final String TAG = MoviesTasks.class.getSimpleName();
     private static final String ARG_MOVIE = "movie";
-
     private static final int ID_VIDEOS_LOADER = 82;
 
     private MovieInfo mMovieInfo;
@@ -90,12 +99,12 @@ public class MovieVideosFragment  extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public Loader<String[]> onCreateLoader(int id, Bundle args) {
+    public Loader<Map<String, String>> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case ID_VIDEOS_LOADER:
-                return new AsyncTaskLoader<String[]>(getContext()) {
+                return new AsyncTaskLoader<Map<String, String>>(getContext()) {
 
-                    String[] mVideoPaths;
+                    Map<String, String> mVideoPaths;
 
                     @Override
                     protected void onStartLoading() {
@@ -107,13 +116,20 @@ public class MovieVideosFragment  extends Fragment implements LoaderManager.Load
                     }
 
                     @Override
-                    public String[] loadInBackground() {
-                        // TODO
-                        return new String[20];
+                    public Map<String, String> loadInBackground() {
+                        try {
+                            URL videosURL = TMDbNetworkUtils.buildMovieVideosURL(mMovieInfo.getMovieId());
+                            String videosJsonStr = TMDbNetworkUtils.getResponseFromHttpUrl(videosURL);
+                            Map<String, String> videosMap = TMDbJsonUtils.getVideoPathsFromJson(videosJsonStr);
+                            return videosMap;
+                        } catch (TMDbException e) {
+                            Log.d(TAG, "Error retrieving movie videos. ", e);
+                            return null;
+                        }
                     }
 
                     @Override
-                    public void deliverResult(String[] data) {
+                    public void deliverResult(Map<String, String> data) {
                         mVideoPaths = data;
                         super.deliverResult(mVideoPaths);
                     }
@@ -124,9 +140,13 @@ public class MovieVideosFragment  extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(Loader<String[]> loader, String[] data) {
-        showVideos();
-        mVideosAdapter.setVideoPaths(data);
+    public void onLoadFinished(Loader<Map<String, String>> loader, Map<String, String> data) {
+        if (data == null || data.size() == 0) {
+            showErrorMsg();
+        } else {
+            showVideos();
+            mVideosAdapter.setVideoPaths(data);
+        }
     }
 
     private void showVideos() {
@@ -142,13 +162,15 @@ public class MovieVideosFragment  extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<String[]> loader) {
+    public void onLoaderReset(Loader<Map<String, String>> loader) {
         // nothing to do
     }
 
     private class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdapterViewHolder> {
 
-        private String[] mVideoPaths;
+        private Map<String, String> mVideoPathsMap;
+        private List<String> mVideoNames;
+        private List<String> mVideoPaths;
 
         @Override
         public VideosAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -162,22 +184,34 @@ public class MovieVideosFragment  extends Fragment implements LoaderManager.Load
 
         @Override
         public void onBindViewHolder(VideosAdapterViewHolder holder, int position) {
-            // nothing to do
+            holder.mVideoName.setText(mVideoNames.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mVideoPaths != null ? mVideoPaths.length : 0;
+            return mVideoPaths != null ? mVideoPaths.size() : 0;
         }
 
-        public void setVideoPaths(String[] videoPaths) {
-            mVideoPaths = videoPaths;
+        public void setVideoPaths(Map<String, String> videoPathsMap) {
+            mVideoPathsMap = videoPathsMap;
+            mVideoNames = new ArrayList<>();
+            mVideoPaths = new ArrayList<>();
+            if (mVideoPathsMap != null) {
+                for (Map.Entry<String,String> entry : mVideoPathsMap.entrySet()) {
+                    mVideoNames.add(entry.getKey());
+                    mVideoPaths.add(entry.getValue());
+                }
+            }
             notifyDataSetChanged();
         }
+
         public class VideosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+            public TextView mVideoName;
 
             public VideosAdapterViewHolder(View view) {
                 super(view);
+                mVideoName = (TextView) view.findViewById(R.id.tv_video_name);
                 view.setOnClickListener(this);
             }
 
@@ -188,9 +222,9 @@ public class MovieVideosFragment  extends Fragment implements LoaderManager.Load
              */
             @Override
             public void onClick(View v) {
-                int adapterPosition = getAdapterPosition();
-                System.out.println("\n\n"+mVideoPaths[adapterPosition]);
-                // intent here
+                String videoPath = mVideoPaths.get(getAdapterPosition());
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoPath));
+                startActivity(intent);
             }
         }
     }

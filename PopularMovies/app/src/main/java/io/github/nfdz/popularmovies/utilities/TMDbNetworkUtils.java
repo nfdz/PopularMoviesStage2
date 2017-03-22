@@ -37,7 +37,8 @@ public class TMDbNetworkUtils {
     // TMDb base URLs
     private static final String POPULAR_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/popular?";
     private static final String TOP_RATED_MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/top_rated?";
-    private static final String CONFIGURATION_BASE_URL = " https://api.themoviedb.org/3/configuration?";
+    private static final String CONFIGURATION_BASE_URL = "https://api.themoviedb.org/3/configuration?";
+    private static final String MOVIE_VIDEOS_BASE_FORMAT_URL = "https://api.themoviedb.org/3/movie/%d/videos?";
 
     // URL movies params
     static final String PAGE_PARAM = "page";
@@ -92,6 +93,31 @@ public class TMDbNetworkUtils {
         try {
             URL url = new URL(builtUri.toString());
             Log.v(TAG, "Built configuration URL: " + url);
+            return url;
+        } catch (MalformedURLException e) {
+            throw new TMDbException(ERROR_URL, e);
+        }
+    }
+
+    /**
+     * This method builds the URL needed to request TMDb movie videos.
+     * For more information: https://developers.themoviedb.org/3/movies/get-movie-videos
+     *
+     * @param movieId
+     * @return The URL to use to query the movies vidios server.
+     * @throws TMDbException TMDbException Exception building URL.
+     */
+    public static URL buildMovieVideosURL(int movieId) throws TMDbException {
+
+        String movieVideoBasePath = String.format(MOVIE_VIDEOS_BASE_FORMAT_URL, movieId);
+        Uri builtUri = Uri.parse(movieVideoBasePath).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, DEFAULT_LANG)
+                .build();
+
+        try {
+            URL url = new URL(builtUri.toString());
+            Log.v(TAG, "Built movie videos URL: " + url);
             return url;
         } catch (MalformedURLException e) {
             throw new TMDbException(ERROR_URL, e);
