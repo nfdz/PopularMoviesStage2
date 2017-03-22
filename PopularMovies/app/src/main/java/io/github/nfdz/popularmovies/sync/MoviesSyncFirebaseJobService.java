@@ -4,7 +4,6 @@
 package io.github.nfdz.popularmovies.sync;
 
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.firebase.jobdispatcher.JobParameters;
@@ -23,9 +22,9 @@ public class MoviesSyncFirebaseJobService extends JobService {
         mSyncTask = new AsyncTask<Void, Void, Void>(){
             @Override
             protected Void doInBackground(Void... voids) {
-                // TODO check last timestamp to decide if sync
-                Context context = getApplicationContext();
-                MoviesTasks.syncMovies(context);
+                if (!MoviesSyncUtils.isMoviesDataValid(MoviesSyncFirebaseJobService.this)) {
+                    MoviesTasks.syncMovies(MoviesSyncFirebaseJobService.this);
+                }
                 jobFinished(job, false);
                 return null;
             }

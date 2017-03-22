@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.github.nfdz.popularmovies.data.MovieContract;
+import io.github.nfdz.popularmovies.data.PreferencesUtils;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
 import io.github.nfdz.popularmovies.utilities.TMDbException;
@@ -152,6 +153,10 @@ public class MoviesTasks {
             popularValues.put(MovieContract.HighestRatedMovieEntry.COLUMN_MOVIE_ID, movie.getMovieId());
             contentResolver.insert(MovieContract.HighestRatedMovieEntry.CONTENT_URI, popularValues);
         }
+
+        // save sync time in preferences
+        long now = System.currentTimeMillis();
+        PreferencesUtils.setLastSynchronizationTime(context, now);
     }
 
     private static List<MovieInfo> fetchMoviesWithCriteria(int criteria) throws TMDbException {

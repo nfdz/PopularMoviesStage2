@@ -21,6 +21,7 @@ import com.firebase.jobdispatcher.Trigger;
 import java.util.concurrent.TimeUnit;
 
 import io.github.nfdz.popularmovies.data.MovieContract;
+import io.github.nfdz.popularmovies.data.PreferencesUtils;
 
 /**
  * This class has several methods to manage data sync in a safe way (avoid computing long tasks in
@@ -32,6 +33,12 @@ public class MoviesSyncUtils {
     private static final int SYNC_INTERVAL_HOURS = 24;
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
+
+    /**
+     * It should be bigger than firebase scheduled job service definded in SYNC_INTERVAL_HOURS.
+     */
+    public static final int DATA_VALIDITY_TIME_HOURS = 48; // two days
+    public static final int DATA_VALIDITY_TIME_MILLIS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
 
     private static boolean sInitialized = false;
 
@@ -76,9 +83,16 @@ public class MoviesSyncUtils {
         Thread checkIfEmpty = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                // check last sync time
+                if (!MoviesSyncUtils.isMoviesDataValid(context)) {
+                    startImmediateSync(context);
+                    return;
+                }
+
+                // check if there is no data
                 Uri moviesQueryUri = MovieContract.MovieEntry.CONTENT_URI;
                 String[] projection = { MovieContract.MovieEntry._ID };
-                // TODO check time
                 Cursor cursor = context.getContentResolver().query(moviesQueryUri,
                         projection,
                         null,
@@ -88,7 +102,7 @@ public class MoviesSyncUtils {
                 if (cursor == null || cursor.getCount() == 0) {
                     startImmediateSync(context);
                 }
-                cursor.close();
+                if (cursor != null) cursor.close();
             }
         });
 
@@ -103,5 +117,17 @@ public class MoviesSyncUtils {
         Intent intentToSync = new Intent(context, MoviesTasksIntentService.class);
         intentToSync.setAction(MoviesTasks.ACTION_SYNC_MOVIES);
         context.startService(intentToSync);
+    }
+
+    /**
+     * Checks if current movie data is valid checking last synchronization time in preferences.
+     * Warning, it read from shared preferences in calling thread, so be careful using this method.
+     * @param context
+     * @return true if it is valid, false if not
+     */
+    public static boolean isMoviesDataValid(Context context) {
+        long timeSinceLastSync = PreferencesUtils.getElapsedTimeSinceLastSynchronization(context);
+        boolean dataValid = timeSinceLastSync <= MoviesSyncUtils.DATA_VALIDITY_TIME_MILLIS;
+        return dataValid;
     }
 }
