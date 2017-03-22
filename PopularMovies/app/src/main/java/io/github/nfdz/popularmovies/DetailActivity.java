@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -105,10 +104,19 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.detail, menu);
-        MenuItem shareItem = menu.findItem(R.id.action_share);
-        // FIXME
-        //shareItem.setIntent(createShareMovieIntent());
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.action_share) {
+            startActivity(createShareMovieIntent());
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -173,10 +181,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_poster))
                 .into(mPoster);
         String backdropPath = TMDBImagesUtils.resolveImagePath(mMovie.getBackdropPaths(), mBackdropWidth);
-        Picasso.with(this)
-                .load(backdropPath)
-                .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_backdrop))
-                .into(mBackdrop);
+        if (mBackdrop.getVisibility() != View.GONE) {
+            Picasso.with(this)
+                    .load(backdropPath)
+                    .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_backdrop))
+                    .into(mBackdrop);
+        }
 
         FavoritesUtils.resolveFavorite(this, mMovie.getMovieId(), new FavoritesUtils.ResolveFavoriteCallback() {
             @Override
