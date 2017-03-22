@@ -3,6 +3,9 @@
  */
 package io.github.nfdz.popularmovies.types;
 
+/**
+ * This class contains all needed information about a movie review.
+ */
 public class MovieReview {
     private final String mAuthor;
     private final String mContent;

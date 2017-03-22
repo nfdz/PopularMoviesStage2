@@ -6,11 +6,16 @@ package io.github.nfdz.popularmovies.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import io.github.nfdz.popularmovies.data.MovieContract.PopularMovieEntry;
-import io.github.nfdz.popularmovies.data.MovieContract.HighestRatedMovieEntry;
-import io.github.nfdz.popularmovies.data.MovieContract.FavoriteMovieEntry;
-import io.github.nfdz.popularmovies.data.MovieContract.MovieEntry;
 
+import io.github.nfdz.popularmovies.data.MovieContract.FavoriteMovieEntry;
+import io.github.nfdz.popularmovies.data.MovieContract.HighestRatedMovieEntry;
+import io.github.nfdz.popularmovies.data.MovieContract.MovieEntry;
+import io.github.nfdz.popularmovies.data.MovieContract.PopularMovieEntry;
+
+/**
+ * This database helper implementation manage mainly the creation and upgrading of the
+ * sqlite database related with movie data contract.
+ */
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movies.db";

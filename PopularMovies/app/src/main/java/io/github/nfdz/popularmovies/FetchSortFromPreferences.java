@@ -11,6 +11,10 @@ import io.github.nfdz.popularmovies.data.PreferencesUtils;
 import io.github.nfdz.popularmovies.sync.MoviesTasks;
 import io.github.nfdz.popularmovies.types.AsyncTaskListener;
 
+/**
+ * This async task implementation retrieves sort preference in a background thread and notify
+ * result in UI thread using given callback.
+ */
 public class FetchSortFromPreferences extends AsyncTask<Void, Void, Integer> {
 
     private static final String TAG = MoviesTasks.class.getSimpleName();

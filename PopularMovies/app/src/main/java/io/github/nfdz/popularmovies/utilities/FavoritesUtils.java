@@ -12,18 +12,34 @@ import io.github.nfdz.popularmovies.data.MovieContract;
 import io.github.nfdz.popularmovies.sync.MoviesTasks;
 import io.github.nfdz.popularmovies.types.AsyncTaskListener;
 
+/**
+ * This class has methods to manage favorite movies in a safe way (avoid computing long tasks in
+ * UI thread).
+ */
 public class FavoritesUtils {
 
+    /**
+     * Interface operation callback.
+     */
     public interface  ResolveFavoriteCallback {
         void notifyResult(boolean isFavorite);
     }
 
+    /**
+     * This method executes in a background thread the operations needed to resolve if the given
+     * movie id is marked as favorite. It notifies using given callback in UI thread.
+     * @param context
+     * @param movieId
+     * @param callback
+     */
     public static void resolveFavorite(Context context, int movieId, ResolveFavoriteCallback callback) {
         new ResolveFavoriteTask(context, movieId, callback).execute();
     }
 
-
-    public static class ResolveFavoriteTask extends AsyncTask<Void, Void, Boolean> {
+    /**
+     * Async task implementation to resolve if a movie is marked as favorite.
+     */
+    private static class ResolveFavoriteTask extends AsyncTask<Void, Void, Boolean> {
 
         private final ResolveFavoriteCallback mCallback;
         private final int mMovieId;
@@ -52,6 +68,14 @@ public class FavoritesUtils {
         }
     }
 
+    /**
+     * This method toggles the given movie favorite state in a background thread. If movie is
+     * favorite, it will remove from favorites. If movie is not favorite, it will add to favorite.
+     * It notifies final favorite result using given callback in UI thread.
+     * @param context
+     * @param movieId
+     * @param callback
+     */
     public static void toggleFavorite(final Context context, final int movieId, final ResolveFavoriteCallback callback) {
         new ResolveFavoriteTask(context, movieId, new ResolveFavoriteCallback() {
             @Override
@@ -73,7 +97,10 @@ public class FavoritesUtils {
         }).execute();
     }
 
-    public static class RemoveFavoriteTask extends AsyncTask<Void, Void, Void> {
+    /**
+     * Async task implementation to remove a movie from favorites.
+     */
+    private static class RemoveFavoriteTask extends AsyncTask<Void, Void, Void> {
 
         private final AsyncTaskListener<Void> mCallback;
         private final int mMovieId;
@@ -97,7 +124,10 @@ public class FavoritesUtils {
         }
     }
 
-    public static class InsertFavoriteTask extends AsyncTask<Void, Void, Void> {
+    /**
+     * Async task implementation to add a movie from favorites.
+     */
+    private static class InsertFavoriteTask extends AsyncTask<Void, Void, Void> {
 
         private final AsyncTaskListener<Void> mCallback;
         private final int mMovieId;

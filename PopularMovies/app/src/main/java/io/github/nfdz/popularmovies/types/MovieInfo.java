@@ -6,10 +6,9 @@ package io.github.nfdz.popularmovies.types;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Arrays;
-
 /**
- * This class contains all needed information about a movie in this application.
+ * This class contains all needed information about a movie needed in this application,
+ * except reviews and videos.
  */
 public class MovieInfo implements Parcelable {
 

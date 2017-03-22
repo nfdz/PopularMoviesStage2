@@ -8,6 +8,9 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+/**
+ * Movies data contract.
+ */
 public class MovieContract {
 
     public static final String CONTENT_AUTHORITY = "io.github.nfdz.popularmovies";

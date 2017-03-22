@@ -13,6 +13,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+/**
+ * Content provider implementation. This content provider manages all movies data defined in
+ * movie data contract.
+ */
 public class MovieContentProvider extends ContentProvider {
 
     public static final int CODE_MOVIES = 100;
@@ -144,6 +148,7 @@ public class MovieContentProvider extends ContentProvider {
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
+
 
     private Cursor queryMoviesFromReferencedTable(String tableName,
                                                   String column,

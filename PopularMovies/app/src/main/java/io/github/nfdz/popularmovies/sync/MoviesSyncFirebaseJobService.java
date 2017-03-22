@@ -10,6 +10,10 @@ import android.os.AsyncTask;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
+/**
+ * This firebase service implementation checks if it is needed sync movies data and performs it
+ * in background.
+ */
 public class MoviesSyncFirebaseJobService extends JobService {
 
     private AsyncTask<Void, Void, Void> mSyncTask;

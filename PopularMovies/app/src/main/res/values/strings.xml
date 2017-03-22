@@ -1,22 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2017 Noe Fernandez
+-->
 <resources>
-    <string name="app_name">Popular Movies</string>
 
+    <string name="app_name">Popular Movies</string>
     <string name="content_authority">io.github.nfdz.popularmovies</string>
 
+    <!-- Actions menu labels -->
     <string name="action_share">Share</string>
     <string name="action_sort">Sort by</string>
 
+    <!-- Detail navigation bottom menu labels -->
     <string name="detail_navigation_info">Details</string>
     <string name="detail_navigation_videos">Videos</string>
     <string name="detail_navigation_reviews">Reviews</string>
 
+    <!-- Choose sort dialog labels -->
     <string name="sort_by_dialog_title">Sort by</string>
     <string name="sort_by_popular">Most popular</string>
     <string name="sort_by_rated">Highest-rated</string>
     <string name="sort_by_favorite">Favorites</string>
 
+    <!-- Unicode symbol that is always following movie rating  -->
     <string name="movie_item_rating_unit">★</string>
 
     <string name="movie_detail_synopsis_label">Synopsis</string>
+    <string name="movie_detail_no_videos_msg">This movie has no videos.</string>
+    <string name="movie_detail_no_reviews_msg">This movie has no reviews.</string>
 
 </resources>

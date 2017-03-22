@@ -43,8 +43,9 @@ import io.github.nfdz.popularmovies.utilities.FavoritesUtils;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
 import io.github.nfdz.popularmovies.utilities.TMDBImagesUtils;
 
-public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        BottomNavigationView.OnNavigationItemSelectedListener{
+public class DetailActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
@@ -55,10 +56,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private static final String FRAGMENT_KEY = "detail-fragment";
 
     /** MovieInfo object that describes this activity */
-    private Uri mMovieUri;
     private MovieInfo mMovie;
+    private Uri mMovieUri;
     private int mBackdropWidth;
     private int mPosterWidth;
+
+    /** Last selected detail fragment using navigation */
     private int mLastDetailFragment = -1;
 
     @BindView(R.id.pb_movie_detail_loading) ProgressBar mLoading;
@@ -81,7 +84,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mPosterWidth = getResources().getDimensionPixelSize(R.dimen.movie_item_poster_width);
         mBackdropWidth = getDisplayWidth();
 
-        // Check if the intent contains expected movie object
+        // check if the intent contains expected movie object
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
             mMovieUri = intent.getData();
@@ -180,14 +183,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 .load(posterPath)
                 .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_poster))
                 .into(mPoster);
-        String backdropPath = TMDBImagesUtils.resolveImagePath(mMovie.getBackdropPaths(), mBackdropWidth);
+        // If backdrop is not visible, avoid to download and show the image
         if (mBackdrop.getVisibility() != View.GONE) {
+            String backdropPath = TMDBImagesUtils.resolveImagePath(mMovie.getBackdropPaths(), mBackdropWidth);
             Picasso.with(this)
                     .load(backdropPath)
                     .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_backdrop))
                     .into(mBackdrop);
         }
 
+        // resolve if this movie is favorite to show the correct icon
         FavoritesUtils.resolveFavorite(this, mMovie.getMovieId(), new FavoritesUtils.ResolveFavoriteCallback() {
             @Override
             public void notifyResult(boolean isFavorite) {
@@ -197,7 +202,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
         showDetails();
 
-        // Use handler to ensure that there is no state loss
+        // Set correct fragment in details content.
+        // Use handler to ensure that there is no state loss.
         new Handler(){
         }.post(new Runnable() {
             @Override

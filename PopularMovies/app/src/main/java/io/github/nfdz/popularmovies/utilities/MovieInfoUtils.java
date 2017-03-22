@@ -7,14 +7,19 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.github.nfdz.popularmovies.data.MovieContract;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 
+/**
+ * This class has useful methods to work with movie data contract and java movie types.
+ */
 public class MovieInfoUtils {
 
+    /**
+     * Projection needed to build MovieInfo java object.
+     */
     public static final String[] MOVIES_PROJECTION = {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_TITLE,
@@ -25,6 +30,7 @@ public class MovieInfoUtils {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry.COLUMN_BACKDROP_PATHS
     };
 
+    // Indexes for MOVIES_PROJECTION
     public static final int INDEX_MOVIE_ID = 0;
     public static final int INDEX_MOVIE_TITLE = 1;
     public static final int INDEX_MOVIE_RELEASE_DATE = 2;
@@ -35,6 +41,12 @@ public class MovieInfoUtils {
 
     public static final String PATHS_SEPARATOR = ";";
 
+    /**
+     * Extract MovieInfo objects contained in given cursor. It is important that cursor has
+     * expected projection MOVIES_PROJECTION.
+     * @param cursor
+     * @return map with movie id as key and movie info as value.
+     */
     public static Map<Integer, MovieInfo> getMoviesFromCursor(Cursor cursor) {
         Map<Integer, MovieInfo> movies = new HashMap<>();
         cursor.moveToFirst();
@@ -60,10 +72,21 @@ public class MovieInfoUtils {
         return movies;
     }
 
+    /**
+     * This method split an array of path joined in one string to store to accomplish with
+     * data contract.
+     * @param mergedPaths
+     * @return An array with paths.
+     */
     public static String[] splitPaths(String mergedPaths) {
         return mergedPaths.split(PATHS_SEPARATOR);
     }
 
+    /**
+     * This method join an array of paths in one string to store to accomplish with data contract.
+     * @param paths
+     * @return string with joined paths.
+     */
     public static String mergePaths(String[] paths) {
         StringBuilder mergedPaths = new StringBuilder();
         for (String path : paths) {
@@ -73,6 +96,11 @@ public class MovieInfoUtils {
         return mergedPaths.toString();
     }
 
+    /**
+     * This method builds and fills a ContentValues object for given movie info java object.
+     * @param movie
+     * @return ContentValues
+     */
     public static ContentValues getContentValuesFor(MovieInfo movie) {
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry._ID, movie.getMovieId());

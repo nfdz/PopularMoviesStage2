@@ -22,6 +22,10 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.nfdz.popularmovies.data.MovieContract;
 
+/**
+ * This class has several methods to manage data sync in a safe way (avoid computing long tasks in
+ * UI thread). It is important run initialize at least once to grants that application is synchronized.
+ */
 public class MoviesSyncUtils {
 
     /** Interval at which to sync with the movies data. */
@@ -57,6 +61,11 @@ public class MoviesSyncUtils {
         dispatcher.schedule(syncSunshineJob);
     }
 
+    /**
+     * This methods initializes movies data synchronization (checking if it is needed sync just now)
+     * and scheduling automatic synchronization.
+     * @param context
+     */
     synchronized public static void initialize(@NonNull final Context context) {
 
         if (sInitialized) return;
@@ -69,7 +78,7 @@ public class MoviesSyncUtils {
             public void run() {
                 Uri moviesQueryUri = MovieContract.MovieEntry.CONTENT_URI;
                 String[] projection = { MovieContract.MovieEntry._ID };
-
+                // TODO check time
                 Cursor cursor = context.getContentResolver().query(moviesQueryUri,
                         projection,
                         null,
@@ -86,6 +95,10 @@ public class MoviesSyncUtils {
         checkIfEmpty.start();
     }
 
+    /**
+     * This method starts task executor service to sync movies data in background.
+     * @param context
+     */
     public static void startImmediateSync(@NonNull final Context context) {
         Intent intentToSync = new Intent(context, MoviesTasksIntentService.class);
         intentToSync.setAction(MoviesTasks.ACTION_SYNC_MOVIES);

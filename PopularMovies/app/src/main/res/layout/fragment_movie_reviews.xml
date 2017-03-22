@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2017 Noe Fernandez
+-->
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="@dimen/detail_fragment_height"
@@ -10,7 +13,7 @@
         android:id="@+id/tv_movie_detail_no_reviews"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This movie has no reviews."
+        android:text="@string/movie_detail_no_reviews_msg"
         style="@style/DetailBodyTitleText"
         android:visibility="invisible"  />
 
