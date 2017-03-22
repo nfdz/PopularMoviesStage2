@@ -34,6 +34,7 @@
         android:textAlignment="textStart"
         android:textSize="12sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="@+id/iv_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster"
         tools:text="Movie Title (2999)" />
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:textSize="10sp"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="@+id/tv_movie_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
         tools:text="9/10" />
@@ -55,6 +57,7 @@
         android:fontFamily="sans-serif"
         android:textSize="10sp"
         android:text="@string/movie_item_rating_unit"
+        android:textColor="@color/colorRatingStar"
         app:layout_constraintLeft_toRightOf="@+id/tv_movie_rating"
         app:layout_constraintTop_toBottomOf="@+id/tv_movie_rating"
         app:layout_constraintBottom_toTopOf="@+id/tv_movie_rating"

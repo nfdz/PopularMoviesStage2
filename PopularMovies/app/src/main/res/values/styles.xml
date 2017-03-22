@@ -8,4 +8,32 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MainActivityTheme" parent="@style/AppTheme">
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/ActionBar</item>
+    </style>
+
+    <style name="ActionBar"
+        parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="logo">@drawable/ic_logo</item>
+    </style>
+
+    <style name="DetailsActivityTheme" parent="@style/AppTheme">
+        <item name="android:actionBarStyle">@style/DetailsActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/DetailsActionBar</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="DetailsActionBar"
+        parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="displayOptions">showHome</item>
+        <item name="android:background">@null</item>
+        <!-- Support library compatibility -->
+        <item name="background">@null</item>
+    </style>
+
 </resources>

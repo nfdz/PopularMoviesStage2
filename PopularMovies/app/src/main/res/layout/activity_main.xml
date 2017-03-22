@@ -11,7 +11,8 @@
     android:paddingLeft="@dimen/activity_horizontal_padding"
     android:paddingRight="@dimen/activity_horizontal_padding"
     android:paddingTop="@dimen/activity_vertical_padding"
-    tools:context="io.github.nfdz.popularmovies.MainActivity">
+    tools:context="io.github.nfdz.popularmovies.MainActivity"
+    android:background="@color/colorPrimaryDark">
 
     <!--This RecyclerView shows movies information-->
     <android.support.v7.widget.RecyclerView

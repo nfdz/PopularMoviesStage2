@@ -163,8 +163,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         Map.Entry<Integer, MovieInfo> entry = movies.entrySet().iterator().next();
         mMovie = entry.getValue();
 
-        // Set this activity title the movie title
-        setTitle(mMovie.getTitle());
         // Set movie data in ui views
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(mMovie.getReleaseDate());

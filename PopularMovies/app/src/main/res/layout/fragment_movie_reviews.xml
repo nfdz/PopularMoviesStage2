@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="400dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/colorDetailFragment" >
 
     <TextView
         android:id="@+id/tv_movie_detail_no_reviews"
