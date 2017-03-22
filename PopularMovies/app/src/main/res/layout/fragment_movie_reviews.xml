@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="400dp"
@@ -7,17 +6,17 @@
     android:padding="24dp">
 
     <TextView
-        android:id="@+id/tv_movie_detail_no_videos"
+        android:id="@+id/tv_movie_detail_no_reviews"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This movie has no trailer videos available."
+        android:layout_height="wrap_content"
+        android:text="This movie has no reviews."
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="invisible"  />
 
     <ProgressBar
-        android:id="@+id/pb_movie_detail_videos_loading"
+        android:id="@+id/pb_movie_detail_reviews_loading"
         android:layout_height="42dp"
         android:layout_width="42dp"
         android:layout_gravity="center"
@@ -25,7 +24,7 @@
 
     <!--This RecyclerView shows videos -->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_movie_details_videos"
+        android:id="@+id/rv_movie_details_reviews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"

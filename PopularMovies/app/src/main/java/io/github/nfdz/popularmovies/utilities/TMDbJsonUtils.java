@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.nfdz.popularmovies.types.MovieInfo;
+import io.github.nfdz.popularmovies.types.MovieReview;
 
 /**
  * These utilities will be used to TMDb JSON data.
@@ -46,6 +47,13 @@ public class TMDbJsonUtils {
     private static final String URL_NODE = "base_url";
     private static final String POSTER_SIZES_NODE = "poster_sizes";
     private static final String BACKDROP_SIZES_NODE = "backdrop_sizes";
+
+    // Movie reviews JSON object nodes
+    private static final String REVIEW_RESULTS_NODE = "results";
+    private static final String REVIEW_AUTHOR_NODE = "author";
+    private static final String REVIEW_CONTENT_NODE = "content";
+    private static final String REVIEW_URL_NODE = "url";
+
 
     // Movie videos JSON object nodes
     private static final String VIDEO_RESULTS_NODE = "results";
@@ -168,7 +176,7 @@ public class TMDbJsonUtils {
      * @return A map with video name as key and video path as value.
      * @throws TMDbException
      */
-    public static Map<String, String> getVideoPathsFromJson(String videosJsonStr) throws TMDbException {
+    public static Map<String, String> getVideosFromJson(String videosJsonStr) throws TMDbException {
         try {
             JSONObject videosJson = new JSONObject(videosJsonStr);
             checkNoErrorCode(videosJson);
@@ -186,6 +194,31 @@ public class TMDbJsonUtils {
                 }
             }
             return videoPaths;
+        } catch(JSONException e) {
+            throw new TMDbException(ERROR_JSON, e);
+        }
+    }
+
+    /**
+     * This method gets reviews contained in given JSON.
+     * @param reviewsJsonStr
+     * @return A List of MovieReview.
+     * @throws TMDbException
+     */
+    public static List<MovieReview> getReviewsFromJson(String reviewsJsonStr) throws TMDbException {
+        try {
+            JSONObject reviewsJson = new JSONObject(reviewsJsonStr);
+            checkNoErrorCode(reviewsJson);
+            JSONArray resultsNode = reviewsJson.getJSONArray(REVIEW_RESULTS_NODE);
+            List<MovieReview> reviews = new ArrayList<>();
+            for (int i = 0; i < resultsNode.length(); i++) {
+                JSONObject reviewNode = resultsNode.getJSONObject(i);
+                String author = reviewNode.getString(REVIEW_AUTHOR_NODE);
+                String content = reviewNode.getString(REVIEW_CONTENT_NODE);
+                String url = reviewNode.getString(REVIEW_URL_NODE);
+                reviews.add(new MovieReview(author, content, url));
+            }
+            return reviews;
         } catch(JSONException e) {
             throw new TMDbException(ERROR_JSON, e);
         }

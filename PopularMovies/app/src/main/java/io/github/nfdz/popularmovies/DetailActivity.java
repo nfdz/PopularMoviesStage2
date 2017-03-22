@@ -223,7 +223,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 changeFragment(MovieVideosFragment.newInstance(mMovie));
                 return true;
             case R.id.detail_navigation_reviews:
-                //changeFragment(new ItemFragment());
+                changeFragment(MovieReviewsFragment.newInstance(mMovie));
                 return true;
         }
         return false;
