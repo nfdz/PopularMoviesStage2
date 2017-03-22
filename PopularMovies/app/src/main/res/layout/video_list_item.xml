@@ -10,9 +10,9 @@
     android:background="@drawable/touch_selector_light">
 
     <ImageView
-        android:padding="10dp"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:padding="@dimen/video_icon_padding"
+        android:layout_width="@dimen/video_icon_size"
+        android:layout_height="@dimen/video_icon_size"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         style="@style/DetailBodyTitleText2"
         android:layout_gravity="center"
-        android:padding="12dp"
+        android:padding="@dimen/video_name_padding"
         tools:text="Video name" />
 
     <!-- This empty view is needed to fill all width space in any situation.

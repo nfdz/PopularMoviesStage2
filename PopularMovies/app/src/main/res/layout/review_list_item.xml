@@ -9,9 +9,9 @@
     android:background="@drawable/touch_selector_light">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:padding="10dp"
+        android:layout_width="@dimen/review_icon_size"
+        android:layout_height="@dimen/review_icon_size"
+        android:padding="@dimen/review_icon_padding"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
@@ -39,8 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/DetailBodyText"
-            android:padding="12dp"
-            android:maxLines="3"
+            android:padding="@dimen/review_content_padding"
+            android:maxLines="@integer/review_content_max_lines"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " />
 
     </LinearLayout>
