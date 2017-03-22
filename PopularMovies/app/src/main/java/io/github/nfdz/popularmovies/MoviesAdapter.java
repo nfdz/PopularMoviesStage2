@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import io.github.nfdz.popularmovies.data.MovieContract;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
+import io.github.nfdz.popularmovies.utilities.TMDBImagesUtils;
 
 /**
  * This class a recycler view adapter and manage the creation and binding of movie ui items.
@@ -41,7 +42,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     /** This cursor has got the movies to show, it could be null */
     private Cursor mCursor;
 
+    private final Context mContext;
     private final MoviesAdapterOnClickHandler mClickHandler;
+    private final int mPosterWidth;
 
     /**
      * The interface that receives onClick messages.
@@ -55,15 +58,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
      *
      * @param clickHandler This single handler is called when an item is clicked.
      */
-    public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
+    public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler, Context context) {
+        mContext = context;
         mClickHandler = clickHandler;
+        mPosterWidth = mContext.getResources().getDimensionPixelSize(R.dimen.movie_item_poster_width);
     }
 
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         int layoutId = R.layout.movies_list_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         boolean shouldAttachToParent = false;
         View view = inflater.inflate(layoutId, parent, shouldAttachToParent);
         return new MoviesAdapterViewHolder(view);
@@ -75,14 +79,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         holder.mTitleTextView.setText(mCursor.getString(INDEX_MOVIE_TITLE) +
                 " (" + getYear(mCursor.getString(INDEX_MOVIE_RELEASE_DATE)) + ")");
         holder.mRatingTextView.setText(Double.toString(mCursor.getDouble(INDEX_MOVIE_RATING))+"/10");
-        Context context = holder.mPosterImageView.getContext();
         String mergedPosterPaths = mCursor.getString(INDEX_MOVIE_POSTER_PATHS);
-        /// FIXME
         String[] posterPaths = MovieInfoUtils.splitPaths(mergedPosterPaths);
+        String posterPath = TMDBImagesUtils.resolveImagePath(posterPaths, mPosterWidth);
         // add no poster art meanwhile Picasso is loading the poster
-        Picasso.with(context)
-                .load(posterPaths[0])
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.art_no_poster))
+        Picasso.with(mContext)
+                .load(posterPath)
+                .placeholder(ContextCompat.getDrawable(mContext, R.drawable.art_no_poster))
                 .into(holder.mPosterImageView);
     }
 

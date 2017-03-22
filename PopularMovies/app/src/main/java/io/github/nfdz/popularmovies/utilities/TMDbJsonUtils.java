@@ -102,7 +102,7 @@ public class TMDbJsonUtils {
                 }
 
                 String backdropRes = movieNode.getString(BACKDROP_AVG_NODE);
-                String[] backdropPaths = new String[posterBasePaths.length];
+                String[] backdropPaths = new String[backdropBasePaths.length];
                 for (int j = 0; j < backdropBasePaths.length; j++) {
                     backdropPaths[j] = backdropBasePaths[j] + backdropRes;
                 }
@@ -224,29 +224,4 @@ public class TMDbJsonUtils {
         }
     }
 
-    /**
-     * This method process a list of available sizes for images of TMDb and resolve what
-     * of them is the most suitable for the app needs.
-     *
-     * @param sizes List of available sizes.
-     * @param minPosterWidth Desired minimum width of the poster images in pixels.
-     * @return The most suitable size for given requirement.
-     */
-    private static String resolveSize(List<String> sizes, int minPosterWidth) {
-        // All sizes are like 'w154' excepts 'original'
-        // Try to get the first size with width equal to or greater than half the screen
-        String size = "original";
-        for (String availableSize : sizes) {
-            size = availableSize;
-            if (size.startsWith("w")) {
-                String widthStr = size.substring(1, size.length());
-                int width = Integer.parseInt(widthStr);
-                if (minPosterWidth < width) {
-                    break;
-                }
-            }
-        }
-        Log.v(TAG, "Poster image width size is: " + size + " (Min width=" + minPosterWidth + ")");
-        return size;
-    }
 }

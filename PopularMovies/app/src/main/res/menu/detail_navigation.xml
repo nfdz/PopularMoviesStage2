@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/detail_navigation_info"
         android:checked="true"
         android:title="@string/detail_navigation_info"
-        android:icon="@drawable/ic_info_black_24dp" />
+        android:icon="@drawable/ic_info_black_24dp"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/detail_navigation_videos"
         android:title="@string/detail_navigation_videos"
-        android:icon="@drawable/ic_video_library_black_24dp" />
+        android:icon="@drawable/ic_video_library_black_24dp"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/detail_navigation_reviews"
         android:title="@string/detail_navigation_reviews"
-        android:icon="@drawable/ic_rate_review_black_24dp" />
+        android:icon="@drawable/ic_rate_review_black_24dp"
+        app:showAsAction="always" />
 
 </menu>

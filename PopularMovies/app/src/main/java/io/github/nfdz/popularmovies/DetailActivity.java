@@ -5,6 +5,7 @@ package io.github.nfdz.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +42,7 @@ import butterknife.OnClick;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 import io.github.nfdz.popularmovies.utilities.FavoritesUtils;
 import io.github.nfdz.popularmovies.utilities.MovieInfoUtils;
+import io.github.nfdz.popularmovies.utilities.TMDBImagesUtils;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         BottomNavigationView.OnNavigationItemSelectedListener{
@@ -50,9 +53,14 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final int ID_DETAIL_LOADER = 866;
 
+    private static final String FRAGMENT_KEY = "detail-fragment";
+
     /** MovieInfo object that describes this activity */
     private Uri mMovieUri;
     private MovieInfo mMovie;
+    private int mBackdropWidth;
+    private int mPosterWidth;
+    private int mLastDetailFragment = -1;
 
     @BindView(R.id.pb_movie_detail_loading) ProgressBar mLoading;
     @BindView(R.id.nv_movie_detail_nav) BottomNavigationView mNavigation;
@@ -70,6 +78,10 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        if (savedInstanceState != null) mLastDetailFragment = savedInstanceState.getInt(FRAGMENT_KEY);
+        mPosterWidth = getResources().getDimensionPixelSize(R.dimen.movie_item_poster_width);
+        mBackdropWidth = getDisplayWidth();
+
         // Check if the intent contains expected movie object
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
@@ -80,6 +92,13 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             Log.e(TAG, "Created detail activity without movie data URI stored in intent as expected.");
             finish();
         }
+    }
+
+    private int getDisplayWidth() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
     }
 
     @Override
@@ -150,12 +169,14 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(mMovie.getReleaseDate());
         mRating.setText(Double.toString(mMovie.getRating())+"/10");
+        String posterPath = TMDBImagesUtils.resolveImagePath(mMovie.getPosterPaths(), mPosterWidth);
         Picasso.with(this)
-                .load(mMovie.getPosterPaths()[0])
+                .load(posterPath)
                 .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_poster))
                 .into(mPoster);
+        String backdropPath = TMDBImagesUtils.resolveImagePath(mMovie.getBackdropPaths(), mBackdropWidth);
         Picasso.with(this)
-                .load(mMovie.getBackdropPaths()[0])
+                .load(backdropPath)
                 .placeholder(ContextCompat.getDrawable(this, R.drawable.art_no_backdrop))
                 .into(mBackdrop);
 
@@ -173,7 +194,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }.post(new Runnable() {
             @Override
             public void run() {
-                changeFragment(MovieDetailsFragment.newInstance(mMovie));
+                switch (mLastDetailFragment) {
+                    case R.id.detail_navigation_videos:
+                        changeFragment(MovieVideosFragment.newInstance(mMovie));
+                        break;
+                    case R.id.detail_navigation_reviews:
+                        changeFragment(MovieReviewsFragment.newInstance(mMovie));
+                        break;
+                    default:
+                        changeFragment(MovieDetailsFragment.newInstance(mMovie));
+                }
             }
         });
     }
@@ -214,8 +244,15 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(FRAGMENT_KEY, mLastDetailFragment);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        mLastDetailFragment = item.getItemId();
+        switch (mLastDetailFragment) {
             case R.id.detail_navigation_info:
                 changeFragment(MovieDetailsFragment.newInstance(mMovie));
                 return true;

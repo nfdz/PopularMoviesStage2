@@ -18,7 +18,7 @@
         android:id="@+id/tv_movie_detail_synopsis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_movie_detail_synopsis"
+        android:textSize="12sp"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " />
 
 </LinearLayout>

@@ -37,7 +37,7 @@ import io.github.nfdz.popularmovies.utilities.TMDbNetworkUtils;
 
 public class MovieReviewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<MovieReview[]> {
 
-    private static final String TAG = MoviesTasks.class.getSimpleName();
+    private static final String TAG = MovieReviewsFragment.class.getSimpleName();
     private static final String ARG_MOVIE = "movie";
     private static final int ID_REVIEWS_LOADER = 884;
 

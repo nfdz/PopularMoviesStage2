@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount, orientation, reverseLayout);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mMoviesAdapter = new MoviesAdapter(this);
+        mMoviesAdapter = new MoviesAdapter(this, this);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
         // Uncomment this line to know the network(response time, cache, etc) performance of poster images
