@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/movie_detail_synopsis_label"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        style="@style/DetailBodyTitleText" />
 
     <!--This TextView shows the movie plot synopsis-->
     <TextView
         android:id="@+id/tv_movie_detail_synopsis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        style="@style/DetailBodyText"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " />
 
 </LinearLayout>

@@ -12,6 +12,7 @@
     android:background="@drawable/touch_selector">
 
     <!--This ImageView holds the poster image for one particular movie-->
+
     <ImageView
         android:id="@+id/iv_movie_poster"
         android:layout_width="@dimen/movie_item_poster_width"
@@ -27,14 +28,9 @@
     <!--This ImageView holds the title for one particular movie-->
     <TextView
         android:id="@+id/tv_movie_title"
-        android:layout_width="@dimen/movie_item_poster_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:fontFamily="sans-serif"
-        android:textAlignment="textStart"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        android:layout_width="@dimen/movie_item_poster_width"
+        style="@style/MainActivityMovieTitleText"
         app:layout_constraintLeft_toLeftOf="@+id/iv_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster"
         tools:text="Movie Title (2999)" />
@@ -43,9 +39,7 @@
         android:id="@+id/tv_movie_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textSize="10sp"
-        android:textColor="@color/white"
+        style="@style/MainActivityMovieRatingText"
         app:layout_constraintLeft_toLeftOf="@+id/tv_movie_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
         tools:text="9/10" />
@@ -54,8 +48,7 @@
         android:id="@+id/tv_movie_rating_star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textSize="10sp"
+        style="@style/MainActivityMovieRatingText"
         android:text="@string/movie_item_rating_unit"
         android:textColor="@color/colorRatingStar"
         app:layout_constraintLeft_toRightOf="@+id/tv_movie_rating"

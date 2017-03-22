@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:background="@drawable/touch_selector_light">
 
     <ImageView
@@ -21,12 +22,15 @@
         android:id="@+id/tv_video_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="start"
-        android:textAlignment="viewStart"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        style="@style/DetailBodyTitleText"
         android:padding="12dp"
         tools:text="Video name" />
+
+    <!-- This empty view is needed to fill all width space in any situation.
+         (without this, if the text do not need two lines the layout do not
+         fill parent completely and selector events do not work properly. -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
