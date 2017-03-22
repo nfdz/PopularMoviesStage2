@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="movie_item_poster_width">150dp</dimen>
+    <dimen name="movie_item_poster_height">225dp</dimen>
+    <dimen name="movie_item_layout_padding">30dp</dimen>
+    <dimen name="movie_item_title_size">18sp</dimen>
+    <dimen name="movie_item_rating_size">16sp</dimen>
+
+    <dimen name="movie_detail_fav_size">60dp</dimen>
+
+    <dimen name="movie_detail_title_width">400dp</dimen>
+    <dimen name="movie_detail_poster_width">200dp</dimen>
+    <dimen name="movie_detail_poster_height">300dp</dimen>
+    <dimen name="movie_detail_header_title_size">24sp</dimen>
+    <dimen name="movie_detail_header_text_size">18sp</dimen>
+    <dimen name="movie_detail_body_text_size">18sp</dimen>
+    <dimen name="movie_detail_body_title1_size">24sp</dimen>
+    <dimen name="movie_detail_body_title2_size">24sp</dimen>
+</resources>

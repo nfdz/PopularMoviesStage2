@@ -43,12 +43,12 @@
     </style>
 
     <style name="MainActivityMovieTitleText" parent="@style/MainActivityText">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/movie_item_title_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="MainActivityMovieRatingText" parent="@style/MainActivityText">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/movie_item_rating_size</item>
     </style>
 
     <!-- Detail activity styles -->
@@ -56,31 +56,31 @@
     <style name="DetailHeaderTitleText" parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/movie_detail_header_title_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="DetailHeaderText" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/movie_detail_header_text_size</item>
     </style>
 
     <style name="DetailBodyText" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/movie_detail_body_text_size</item>
     </style>
 
     <style name="DetailBodyTitleText" parent="@style/DetailBodyText">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">@dimen/movie_detail_body_title1_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
     </style>
 
     <style name="DetailBodyTitleText2" parent="@style/DetailBodyTitleText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/movie_detail_body_title2_size</item>
     </style>
 
 </resources>

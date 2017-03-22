@@ -17,10 +17,17 @@
     <dimen name="movie_item_poster_width">120dp</dimen>
     <dimen name="movie_item_poster_height">180dp</dimen>
     <dimen name="movie_item_layout_padding">10dp</dimen>
+    <dimen name="movie_item_title_size">12sp</dimen>
+    <dimen name="movie_item_rating_size">10sp</dimen>
 
     <dimen name="movie_detail_fav_size">40dp</dimen>
     <dimen name="movie_detail_title_width">190dp</dimen>
     <dimen name="movie_detail_poster_width">120dp</dimen>
     <dimen name="movie_detail_poster_height">180dp</dimen>
     <dimen name="movie_detail_nav_height">80dp</dimen>
+    <dimen name="movie_detail_header_title_size">18sp</dimen>
+    <dimen name="movie_detail_header_text_size">12sp</dimen>
+    <dimen name="movie_detail_body_text_size">12sp</dimen>
+    <dimen name="movie_detail_body_title1_size">18sp</dimen>
+    <dimen name="movie_detail_body_title2_size">18sp</dimen>
 </resources>
