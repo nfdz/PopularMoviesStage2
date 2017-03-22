@@ -192,16 +192,19 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }.post(new Runnable() {
             @Override
             public void run() {
+                int menuId;
                 switch (mLastDetailFragment) {
                     case R.id.detail_navigation_videos:
-                        changeFragment(MovieVideosFragment.newInstance(mMovie));
+                        menuId = R.id.detail_navigation_videos;
                         break;
                     case R.id.detail_navigation_reviews:
-                        changeFragment(MovieReviewsFragment.newInstance(mMovie));
+                        menuId = R.id.detail_navigation_reviews;
                         break;
                     default:
-                        changeFragment(MovieDetailsFragment.newInstance(mMovie));
+                        menuId = R.id.detail_navigation_info;
                 }
+                View menu = mNavigation.findViewById(menuId);
+                menu.performClick();
             }
         });
     }
