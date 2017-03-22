@@ -26,7 +26,7 @@
             android:id="@+id/tv_review_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/DetailBodyReviewAuthorText"
+            style="@style/DetailBodyTitleText2"
             android:paddingTop="12dp"
             android:paddingStart="12dp"
             android:paddingLeft="12dp"

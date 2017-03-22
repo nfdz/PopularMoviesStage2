@@ -23,11 +23,9 @@ import android.widget.TextView;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.github.nfdz.popularmovies.sync.MoviesTasks;
 import io.github.nfdz.popularmovies.types.MovieInfo;
 import io.github.nfdz.popularmovies.types.MovieReview;
 import io.github.nfdz.popularmovies.utilities.TMDbException;

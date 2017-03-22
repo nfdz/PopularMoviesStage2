@@ -22,7 +22,8 @@
         android:id="@+id/tv_video_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/DetailBodyTitleText"
+        style="@style/DetailBodyTitleText2"
+        android:layout_gravity="center"
         android:padding="12dp"
         tools:text="Video name" />
 

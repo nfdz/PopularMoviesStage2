@@ -79,7 +79,7 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
-    <style name="DetailBodyReviewAuthorText" parent="@style/DetailBodyTitleText">
+    <style name="DetailBodyTitleText2" parent="@style/DetailBodyTitleText">
         <item name="android:textSize">18sp</item>
     </style>
 

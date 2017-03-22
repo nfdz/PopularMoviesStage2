@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2017 Noe Fernandez
+-->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/colorPrimaryDark">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/pb_movie_detail_loading"
+            android:layout_height="42dp"
+            android:layout_width="42dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_movie_detail_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_movie_detail_backdrop"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_movie_detail_poster"
+                android:layout_width="@dimen/movie_detail_poster_width"
+                android:layout_height="@dimen/movie_detail_poster_height"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/art_no_poster"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="120dp"
+                android:layout_marginStart="120dp" />
+
+            <TextView
+                android:id="@+id/tv_movie_detail_title"
+                style="@style/DetailHeaderTitleText"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginStart="60dp"
+                app:layout_constraintBottom_toTopOf="@+id/iv_movie_detail_poster"
+                app:layout_constraintLeft_toRightOf="@+id/iv_movie_detail_poster"
+                app:layout_constraintTop_toBottomOf="@+id/iv_movie_detail_poster"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/tv_movie_detail_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DetailHeaderText"
+                tools:text="2016-06-02"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_movie_detail_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_title" />
+
+            <TextView
+                android:id="@+id/tv_movie_detail_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DetailHeaderText"
+                tools:text="5/10"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_movie_detail_release_date"
+                app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_release_date" />
+
+            <TextView
+                android:id="@+id/tv_movie_detail_rating_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DetailHeaderText"
+                android:text="@string/movie_item_rating_unit"
+                android:textColor="@color/colorRatingStar"
+                app:layout_constraintLeft_toRightOf="@+id/tv_movie_detail_rating"
+                app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_rating"
+                app:layout_constraintBottom_toTopOf="@+id/tv_movie_detail_rating"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp" />
+
+            <ImageButton
+                android:id="@+id/ib_movie_fav"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                app:srcCompat="@drawable/art_favorite_off"
+                app:layout_constraintTop_toBottomOf="@+id/iv_movie_detail_poster"
+                app:layout_constraintBottom_toTopOf="@+id/iv_movie_detail_poster"
+                app:layout_constraintLeft_toRightOf="@+id/tv_movie_detail_title"
+                android:layout_marginRight="12dp"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/nv_movie_detail_nav"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:background="@color/white"
+                app:itemBackground="@drawable/details_nav_selector"
+                app:itemTextColor="@color/black"
+                app:itemIconTint="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/iv_movie_detail_poster"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="16dp"
+                app:menu="@menu/detail_navigation"/>
+
+            <FrameLayout
+                android:id="@+id/movie_detail_nav_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/nv_movie_detail_nav"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+</ScrollView>
